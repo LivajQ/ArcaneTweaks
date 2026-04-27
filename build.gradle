@@ -55,11 +55,14 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     flatDir { dirs 'libs' }
     maven { url = 'https://www.cursemaven.com' }
+    maven { url = "https://maven.bawnorton.com/releases" }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7-beta.1"))
+
     implementation fg.deobf("curse.maven:project-74246-${dldungeonsjbg_version}")
     implementation fg.deobf("curse.maven:ice-and-fire-dragons-${ice_and_fire_version}")
     implementation fg.deobf("curse.maven:citadel-${citadel_version}")
@@ -95,6 +98,10 @@ dependencies {
     implementation fg.deobf("curse.maven:insanelib-${insanelib_version}")
     implementation fg.deobf("curse.maven:spartan-weaponry-${spartan_weaponry_version}")
     implementation fg.deobf("curse.maven:fungal-infection-spore-${spore_version}")
+
+    implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
+        jarJar.ranged(it, "[0.3.7-beta.1,)")
+    }
 }
 
 mixin {

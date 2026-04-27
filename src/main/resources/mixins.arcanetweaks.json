@@ -48,7 +48,8 @@
     "eeeabsmobs.EMArmorMaterialMixin",
     "bclib.UnderwaterPlantBlockMixin",
     "spore.ArmorSyringeMixin",
-    "spore.WeaponSyringeMixin"
+    "spore.WeaponSyringeMixin",
+    "spartanweaponry.MobMixinSquared"
   ],
   "client": [
     "emi.EmiRecipesMixin",
