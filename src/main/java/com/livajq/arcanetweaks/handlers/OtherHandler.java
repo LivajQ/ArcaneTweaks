@@ -33,7 +33,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -73,7 +72,8 @@ public class OtherHandler {
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
     
-    //certain eyes used as dimension teleporters instead
+    //certain eyes used as dimension teleporters instead. temp disabled
+    /*
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event) {
         Item item = event.getItemStack().getItem();
@@ -107,6 +107,7 @@ public class OtherHandler {
             }
         });
     }
+     */
     
     //replace vanilla BiomeSource
     //I probably just don't know how to do it like a normal person but json overrides caused modded biomes to stop generating

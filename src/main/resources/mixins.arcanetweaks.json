@@ -54,7 +54,9 @@
     "bountifulbaubles.BrokenHeartItemMixin",
     "bountifulbaubles.BrokenHeartItemAccessor",
     "bountifulbaubles.PhylacteryCharmItemMixin",
-    "bountifulbaubles.PhylacteryCharmItemAccessor"
+    "bountifulbaubles.PhylacteryCharmItemAccessor",
+    "bountifulbaubles.ModEventsAccessor",
+    "attributeslib.AttributeEventsMixin"
   ],
   "client": [
     "emi.EmiRecipesMixin",

@@ -2,7 +2,6 @@ package com.livajq.arcanetweaks.mixin.eeeabsmobs;
 
 import com.eeeab.eeeabsmobs.sever.item.util.EMArmorMaterial;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

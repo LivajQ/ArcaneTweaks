@@ -25,6 +25,7 @@ public class BountifulBaublesHandler {
     //mostly a broken heart/phylactery class copypaste but moved to LivingDamage LOWEST, so it actually uses armor and other reductions
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingDamage(LivingDamageEvent event) {
+        if (!ModList.get().isLoaded("bountifulbaubles")) return;
         if (!ModList.get().isLoaded("firstaid")) {
             LivingEntity var2 = event.getEntity();
             if (var2 instanceof Player) {
