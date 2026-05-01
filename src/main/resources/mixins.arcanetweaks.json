@@ -50,7 +50,11 @@
     "spore.ArmorSyringeMixin",
     "spore.WeaponSyringeMixin",
     "spore.HandlerEventsMixin",
-    "spartanweaponry.MobMixinSquared"
+    "spartanweaponry.MobMixinSquared",
+    "bountifulbaubles.BrokenHeartItemMixin",
+    "bountifulbaubles.BrokenHeartItemAccessor",
+    "bountifulbaubles.PhylacteryCharmItemMixin",
+    "bountifulbaubles.PhylacteryCharmItemAccessor"
   ],
   "client": [
     "emi.EmiRecipesMixin",

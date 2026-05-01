@@ -98,6 +98,7 @@ dependencies {
     implementation fg.deobf("curse.maven:insanelib-${insanelib_version}")
     implementation fg.deobf("curse.maven:spartan-weaponry-${spartan_weaponry_version}")
     implementation fg.deobf("curse.maven:fungal-infection-spore-${spore_version}")
+    implementation fg.deobf("curse.maven:bountifulbaubles-reforked-${bountifulbaubles_reforked_version}")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")
