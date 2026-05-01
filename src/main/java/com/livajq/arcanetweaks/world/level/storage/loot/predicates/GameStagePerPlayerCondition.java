@@ -3,6 +3,7 @@ package com.livajq.arcanetweaks.world.level.storage.loot.predicates;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
+import com.livajq.arcanetweaks.util.MajruszsUtils;
 import com.majruszsdifficulty.gamestage.GameStage;
 import com.majruszsdifficulty.gamestage.GameStageHelper;
 import net.minecraft.world.entity.Entity;
@@ -11,8 +12,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLLoader;
 
 public class GameStagePerPlayerCondition implements LootItemCondition {
     
@@ -24,7 +23,7 @@ public class GameStagePerPlayerCondition implements LootItemCondition {
     
     @Override
     public boolean test(LootContext ctx) {
-        if (!FMLLoader.isProduction() || !ModList.get().isLoaded("majruszsdifficulty")) return false;
+        if (!MajruszsUtils.isLoaded()) return false;
         
         Entity breaker = ctx.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (breaker instanceof Player player) {

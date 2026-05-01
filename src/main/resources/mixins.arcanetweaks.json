@@ -49,6 +49,7 @@
     "bclib.UnderwaterPlantBlockMixin",
     "spore.ArmorSyringeMixin",
     "spore.WeaponSyringeMixin",
+    "spore.HandlerEventsMixin",
     "spartanweaponry.MobMixinSquared"
   ],
   "client": [

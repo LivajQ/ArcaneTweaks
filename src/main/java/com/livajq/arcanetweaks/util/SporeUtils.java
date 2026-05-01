@@ -1,6 +1,5 @@
 package com.livajq.arcanetweaks.util;
 
-import com.Harbinger.Spore.Core.Sitems;
 import com.Harbinger.Spore.Sitems.BaseWeapons.*;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -59,10 +58,6 @@ public class SporeUtils {
         }
         
         return builder;
-    }
-    
-    public static void addToList (SwordItem item) {
-        Sitems.TINTABLE_ITEMS.add(item);
     }
     
     public static ImmutableMultimap.Builder<Attribute, AttributeModifier> applySporeWeaponAttributes(EquipmentSlot slot, SwordItem weapon, ItemStack stack, Multimap<Attribute, AttributeModifier> modifiers) {
