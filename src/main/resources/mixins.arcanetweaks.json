@@ -45,7 +45,7 @@
     "majruszlibrary.LootHelperMixin",
     "lostcities.BuildingInfoMixin",
     "namelesstrinkets.LootTableHandlerMixin",
-    "eeeabsmobs.EMArmorMaterialMixin",
+    "eeeabsmobs.ModArmorMaterialMixin",
     "bclib.UnderwaterPlantBlockMixin",
     "spore.ArmorSyringeMixin",
     "spore.WeaponSyringeMixin",

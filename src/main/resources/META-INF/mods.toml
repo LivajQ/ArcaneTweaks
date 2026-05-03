@@ -54,7 +54,7 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="eeeabsmobs"
 mandatory=true
-versionRange="[1.20.1-0.97,)"
+versionRange="[1.20.1-0.98,)"
 ordering="AFTER"
 side="BOTH"
 

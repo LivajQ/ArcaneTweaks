@@ -72,12 +72,11 @@ public class OtherHandler {
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
     
-    //certain eyes used as dimension teleporters instead. temp disabled
-    /*
+    //certain eyes used as dimension teleporters instead. 1 eye now
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event) {
         Item item = event.getItemStack().getItem();
-        if (item != ItemInit.ANCIENT_TOMB_EYE.get() && item != ItemInit.BLOODY_ALTAR_EYE.get()) return;
+        if (item != ItemInit.BLOODY_ALTAR_EYE.get()) return;
         event.setCanceled(true);
         Player player = event.getEntity();
         if (player.level().isClientSide() || !player.isCrouching()) return;
@@ -86,9 +85,7 @@ public class OtherHandler {
         MinecraftServer server = serverPlayer.getServer();
         if (server == null) return;
         
-        ResourceKey<Level> targetDim;
-        if (item == ItemInit.ANCIENT_TOMB_EYE.get()) targetDim = Level.NETHER;
-        else targetDim = ABYSS;
+        ResourceKey<Level> targetDim = ABYSS;
         if (serverPlayer.level().dimension() == targetDim) return;
         
         ServerLevel targetLevel = server.getLevel(targetDim);
@@ -107,7 +104,6 @@ public class OtherHandler {
             }
         });
     }
-     */
     
     //replace vanilla BiomeSource
     //I probably just don't know how to do it like a normal person but json overrides caused modded biomes to stop generating
