@@ -1,9 +1,5 @@
 package com.livajq.arcanetweaks;
 
-import com.Harbinger.Spore.Sitems.BaseWeapons.SporeArmorData;
-import com.Harbinger.Spore.Sitems.BaseWeapons.SporeBaseArmor;
-import com.Harbinger.Spore.Sitems.BaseWeapons.SporeToolsBaseItem;
-import com.Harbinger.Spore.Sitems.BaseWeapons.SporeWeaponData;
 import com.Polarice3.Goety.api.ritual.RitualType;
 import com.livajq.arcanetweaks.bossbehavior.BossBehaviorRegistry;
 import com.livajq.arcanetweaks.client.renderer.dimensioneffects.EndSkyboxEffects;
@@ -22,13 +18,10 @@ import com.livajq.arcanetweaks.world.level.storage.loot.predicates.ModLootCondit
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +29,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.betterx.betterend.client.render.BetterEndSkyEffect;
 import org.slf4j.Logger;
@@ -99,14 +91,6 @@ public class ArcaneTweaks {
             event.enqueueWork(() -> {
                 SpecialDeathMessages.init();
             });
-        }
-        
-        @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-            for (Item item : ForgeRegistries.ITEMS.getValues()) {
-                if (!(item instanceof SporeToolsBaseItem) && item instanceof SporeWeaponData data) event.register((itemStack, tintIndex) -> tintIndex == 0 ? data.getVariant(itemStack).getColor() : -1, item);
-                if (!(item instanceof SporeBaseArmor) && item instanceof SporeArmorData data) event.register((itemStack, tintIndex) -> tintIndex == 0 ? data.getVariant(itemStack).getColor() : -1, item);
-            }
         }
     }
 }

@@ -62,15 +62,6 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_RANGE;
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_ITEM;
     private static final ForgeConfigSpec.ConfigValue<String> TRADING_COST_ITEM;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_VAMPIRIC;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_CALCIFIED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_BEZERK;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_TOXIC;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_ROTTEN;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_REINFORCED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_SKELETAL;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_DROWNED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_CHARRED;
     
     private static final ForgeConfigSpec.BooleanValue HARDCORE_ICON_VISIBLE;
     private static final ForgeConfigSpec.BooleanValue NARRATOR_KEYBIND;
@@ -85,9 +76,7 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSX;
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSY;
     private static final ForgeConfigSpec.DoubleValue SEA_SERPENT_REACH;
-    private static final ForgeConfigSpec.DoubleValue FORSAKEN_SPORE_DMG_DEALT;
-    private static final ForgeConfigSpec.DoubleValue FORSAKEN_SPORE_DMG_TAKEN;
-    
+
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
     private static final ForgeConfigSpec.IntValue HARDCORE_ICON_SIZE;
@@ -192,13 +181,6 @@ public final class Config {
                         o -> o instanceof String
                 );
 
-        BUILDER.pop();
-        
-        BUILDER.push("Forsaken");
-        
-        FORSAKEN_SPORE_DMG_DEALT = BUILDER.comment("Multiplier for the damage dealt to Spore mobs by Forsaken").defineInRange("forsakenSporeDmgDealt", 15.0D, -1000.0D, 1000.0D);
-        FORSAKEN_SPORE_DMG_TAKEN = BUILDER.comment("Multiplier for the damage taken by Forsaken from Spore mobs").defineInRange("forsakenSporeDmgTaken", 0.05D, 1000.0D, 1000.0D);
-        
         BUILDER.pop();
         
         SEA_SERPENT_REACH = BUILDER.comment("Attack reach bonus for sea serpents. 0.5 = 50% extra reach etc.").defineInRange("seaSerpentReach", 1.0D, -1000.0D, 1000.0D);
@@ -397,25 +379,6 @@ public final class Config {
         
         BUILDER.pop();
         
-        BUILDER.push("Spore");
-        BUILDER.comment("Effect applied for each mutation. Armor when equipped, weapons when held");
-        BUILDER.comment("Pattern: id;duration;amplifier");
-        BUILDER.comment("Example: minecraft:regeneration;200;1");
-        BUILDER.comment("Effect amplifier is doubled for direct injections. Amplifiers stack the more of the same mutation's used on equipped items");
-        
-        SPORE_MUTATION_EFFECT_VAMPIRIC = BUILDER.comment("Vampiric").define("sporeMutationEffectVampiric", "minecraft:regeneration;200;1");
-        SPORE_MUTATION_EFFECT_CALCIFIED = BUILDER.comment("Calcified").define("sporeMutationEffectCalcified", "minecraft:resistance;200;1");
-        SPORE_MUTATION_EFFECT_BEZERK = BUILDER.comment("Bezerk").define("sporeMutationEffectBezerk", "minecraft:haste;200;1");
-        SPORE_MUTATION_EFFECT_TOXIC = BUILDER.comment("Toxic").define("sporeMutationEffectToxic", "minecraft:poison;200;1");
-        SPORE_MUTATION_EFFECT_ROTTEN = BUILDER.comment("Rotten").define("sporeMutationEffectRotten", "minecraft:wither;200;1");
-        
-        SPORE_MUTATION_EFFECT_REINFORCED = BUILDER.comment("Reinforced").define("sporeMutationEffectReinforced", "minecraft:absorption;200;1");
-        SPORE_MUTATION_EFFECT_SKELETAL = BUILDER.comment("Skeletal").define("sporeMutationEffectSkeletal", "minecraft:resistance;200;1");
-        SPORE_MUTATION_EFFECT_DROWNED = BUILDER.comment("Drowned").define("sporeMutationEffectDrowned", "minecraft:water_breathing;200;1");
-        SPORE_MUTATION_EFFECT_CHARRED = BUILDER.comment("Charred").define("sporeMutationEffectCharred", "minecraft:fire_resistance;200;1");
-        
-        BUILDER.pop();
-        
         BUILDER.push("Resistances");
         
         RESISTANCE_AMOUNT = BUILDER.comment("Damage reduced by the resistance effect per level (0 - 1)").defineInRange("resistanceAmount", 0.1D, 0.0D, 1.0D);
@@ -494,15 +457,6 @@ public final class Config {
     public static TagKey<Biome> ritualEndBiome;
     public static TagKey<Biome> ritualAdeptNetherBiome;
     public static TagKey<Biome> ritualExpertNetherBiome;
-    public static SporeMutationEffect sporeMutationEffectVampiric;
-    public static SporeMutationEffect sporeMutationEffectCalcified;
-    public static SporeMutationEffect sporeMutationEffectBezerk;
-    public static SporeMutationEffect sporeMutationEffectToxic;
-    public static SporeMutationEffect sporeMutationEffectRotten;
-    public static SporeMutationEffect sporeMutationEffectReinforced;
-    public static SporeMutationEffect sporeMutationEffectSkeletal;
-    public static SporeMutationEffect sporeMutationEffectDrowned;
-    public static SporeMutationEffect sporeMutationEffectCharred;
     
     public static boolean hardcoreIconVisible;
     public static boolean narratorKeybind;
@@ -586,8 +540,6 @@ public final class Config {
         dragonNukeColorFire = DRAGON_NUKE_COLOR_FIRE.get();
         dragonNukeColorIce = DRAGON_NUKE_COLOR_ICE.get();
         dragonNukeColorLightning = DRAGON_NUKE_COLOR_LIGHTNING.get();
-        forsakenSporeDamageDealt = FORSAKEN_SPORE_DMG_DEALT.get();
-        forsakenSporeDamageTaken = FORSAKEN_SPORE_DMG_TAKEN.get();
         enchantmentSecondaryCost = parseEnchantmentSecondaryCost(ENCHANTMENT_SECONDARY_COST_RANGE.get(), 0.5F, 2.0F);
         enchantmentSecondaryCostItem = new ResourceLocation(ENCHANTMENT_SECONDARY_COST_ITEM.get());
         tradingCostItem = new ResourceLocation(TRADING_COST_ITEM.get());
@@ -605,15 +557,6 @@ public final class Config {
         gamestageSkillCapExpert = Math.max(gamestageSkillCapNormal, GAMESTAGE_SKILL_CAP_EXPERT.get());
         gamestageSkillCapMaster = Math.max(gamestageSkillCapExpert, GAMESTAGE_SKILL_CAP_MASTER.get());
         narratorKeybind = NARRATOR_KEYBIND.get();
-        sporeMutationEffectVampiric = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_VAMPIRIC.get());
-        sporeMutationEffectCalcified = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_CALCIFIED.get());
-        sporeMutationEffectBezerk = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_BEZERK.get());
-        sporeMutationEffectToxic = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_TOXIC.get());
-        sporeMutationEffectRotten = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_ROTTEN.get());
-        sporeMutationEffectReinforced = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_REINFORCED.get());
-        sporeMutationEffectSkeletal = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_SKELETAL.get());
-        sporeMutationEffectDrowned = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_DROWNED.get());
-        sporeMutationEffectCharred = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_CHARRED.get());
     }
     
     // =========================================================
@@ -781,22 +724,6 @@ public final class Config {
         return list;
     }
     
-    public static SporeMutationEffect parseSporeMutationEffect(String raw) {
-        if (raw == null || raw.isEmpty()) return new SporeMutationEffect(new ResourceLocation("minecraft", "empty"), 0, 0);
-        
-        String[] parts = raw.split(";");
-        if (parts.length != 3) throw new IllegalArgumentException("Invalid mutation effect format: " + raw);
-        
-        ResourceLocation id = new ResourceLocation(parts[0].trim());
-        int duration = Integer.parseInt(parts[1].trim());
-        int amplifier = Integer.parseInt(parts[2].trim());
-        if (duration < 10) duration = 10;
-        if (amplifier < 1) amplifier = 1;
-        
-        return new SporeMutationEffect(id, duration, amplifier - 1);
-    }
-    
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}
-    public record SporeMutationEffect(ResourceLocation id, int duration, int amplifier) {}
 }

@@ -70,9 +70,11 @@ public class OtherHandler {
     private static final ResourceKey<Level> ABYSS = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostworlds", "abyss"));
     private static final UUID HER_ID = UUID.fromString("7905095f-4e96-43d1-83a0-870265821205");
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
+    private static final String WOMPWOMP_NAME = "Therealcaprisun";
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
     
-    //certain eyes used as dimension teleporters instead. 1 eye now
+    //certain eyes used as dimension teleporters instead. 1 eye now. and nothing now lol
+    /*
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event) {
         Item item = event.getItemStack().getItem();
@@ -104,6 +106,7 @@ public class OtherHandler {
             }
         });
     }
+     */
     
     //replace vanilla BiomeSource
     //I probably just don't know how to do it like a normal person but json overrides caused modded biomes to stop generating
@@ -322,7 +325,7 @@ public class OtherHandler {
     public static void onLivingDeathFun(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof NightwardenBossEntity)) return;
         if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (!player.getUUID().equals(WOMPWOMP_ID)) return;
+        if (!player.getUUID().equals(WOMPWOMP_ID) && !player.getGameProfile().getName().equals(WOMPWOMP_NAME)) return;
         if (player.isCreative()) return;
         CompoundTag tag = player.getPersistentData();
         
@@ -334,7 +337,7 @@ public class OtherHandler {
     public static void onPlayerTickFun(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         Player player = event.player;
-        if (!player.getUUID().equals(WOMPWOMP_ID)) return;
+        if (!player.getUUID().equals(WOMPWOMP_ID) && !player.getGameProfile().getName().equals(WOMPWOMP_NAME)) return;
         
         CompoundTag tag = player.getPersistentData();
         

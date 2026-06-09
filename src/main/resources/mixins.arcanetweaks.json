@@ -15,9 +15,6 @@
     "vanilla.MobMixin",
     "vanilla.EnchantmentMixin",
     "vanilla.EnchantBookForEmeraldsMixin",
-    "vanilla.ArmorItemMixin",
-    "vanilla.SwordItemMixin",
-    "vanilla.ItemStackMixin",
     "betterend.DragonTreeFeatureMixin",
     "betterend.GiganticAmaranitaFeatureMixin",
     "betterend.HelixTreeFeatureMixin",
@@ -47,9 +44,6 @@
     "namelesstrinkets.LootTableHandlerMixin",
     "eeeabsmobs.ModArmorMaterialMixin",
     "bclib.UnderwaterPlantBlockMixin",
-    "spore.ArmorSyringeMixin",
-    "spore.WeaponSyringeMixin",
-    "spore.HandlerEventsMixin",
     "spartanweaponry.MobMixinSquared",
     "bountifulbaubles.BrokenHeartItemMixin",
     "bountifulbaubles.BrokenHeartItemAccessor",
@@ -63,8 +57,6 @@
     "vanilla.DeathScreenMixin",
     "vanilla.LivingEntityRendererMixin",
     "vanilla.KeyboardHandlerMixin",
-    "vanilla.HumanoidArmorLayerMixin",
-    "vanilla.ItemRendererMixin",
     "iceandfire.MushroomCloudParticleMixin"
   ]
 }

@@ -86,7 +86,6 @@ dependencies {
     implementation fg.deobf("curse.maven:to-tweaks-irons-spells-${to_tweaks_version}")
     implementation fg.deobf("curse.maven:apothic-attributes-${apothic_attributes_version}")
     implementation fg.deobf("curse.maven:placebo-${placebo_version}")
-    implementation fg.deobf("curse.maven:lost-worlds-lc-${lost_worlds_lc_version}")
     compileOnly fg.deobf("curse.maven:majruszs-progressive-difficulty-${majruszs_progressive_difficulty_version}")
     compileOnly fg.deobf("curse.maven:majrusz-library-${majrusz_library_version}")
     implementation fg.deobf("curse.maven:the-lost-cities-${lost_cities_version}")
@@ -97,8 +96,9 @@ dependencies {
     implementation fg.deobf("curse.maven:enhanced-ai-${enhanced_ai_version}")
     implementation fg.deobf("curse.maven:insanelib-${insanelib_version}")
     implementation fg.deobf("curse.maven:spartan-weaponry-${spartan_weaponry_version}")
-    implementation fg.deobf("curse.maven:fungal-infection-spore-${spore_version}")
     implementation fg.deobf("curse.maven:bountifulbaubles-reforked-${bountifulbaubles_reforked_version}")
+    implementation fg.deobf("curse.maven:eternal-starlight-forge-${eternal_starlight_forge_version}")
+    implementation fg.deobf("curse.maven:irons-lib-${irons_lib_version}")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")
