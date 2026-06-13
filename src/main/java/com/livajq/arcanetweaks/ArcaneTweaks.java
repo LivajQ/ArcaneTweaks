@@ -16,8 +16,11 @@ import com.livajq.arcanetweaks.init.ArcaneSounds;
 import com.livajq.arcanetweaks.util.SpecialDeathMessages;
 import com.livajq.arcanetweaks.world.level.storage.loot.predicates.ModLootConditions;
 import com.mojang.logging.LogUtils;
+import net.miauczel.legendary_monsters.effect.ModEffects;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,6 +66,8 @@ public class ArcaneTweaks {
             BiomeConfigLoader.init();
             PacketHandler.register();
             ResistanceHandler.init();
+            ModEffects.SOUL_FRACTURE.get().addAttributeModifier(Attributes.MAX_HEALTH, "CB3F55D3-645C-4F38-A497-9C13A33DB5CF", Config.soulFractureStrength, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            
             //ReskillableGenerator.generateReskillableEntries();
             //ItemObliteratorGenerator.generateObliteratorBlacklist();
         });

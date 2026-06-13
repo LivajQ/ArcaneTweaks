@@ -176,3 +176,10 @@ mandatory=false
 versionRange="[1.3.7,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="spelunkery"
+mandatory=false
+versionRange="[1.20.1-0.3.16,)"
+ordering="AFTER"
+side="BOTH"

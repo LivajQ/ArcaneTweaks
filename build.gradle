@@ -99,6 +99,8 @@ dependencies {
     implementation fg.deobf("curse.maven:bountifulbaubles-reforked-${bountifulbaubles_reforked_version}")
     implementation fg.deobf("curse.maven:eternal-starlight-forge-${eternal_starlight_forge_version}")
     implementation fg.deobf("curse.maven:irons-lib-${irons_lib_version}")
+    implementation fg.deobf("curse.maven:spelunkery-${spelunkery_version}")
+    implementation fg.deobf("curse.maven:selene-${moonlight_version}")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")

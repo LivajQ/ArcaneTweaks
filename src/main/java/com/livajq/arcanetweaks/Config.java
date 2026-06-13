@@ -62,6 +62,7 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_RANGE;
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_ITEM;
     private static final ForgeConfigSpec.ConfigValue<String> TRADING_COST_ITEM;
+    private static final ForgeConfigSpec.ConfigValue<String> STARLIGHT_PORTAL_ITEM;
     
     private static final ForgeConfigSpec.BooleanValue HARDCORE_ICON_VISIBLE;
     private static final ForgeConfigSpec.BooleanValue NARRATOR_KEYBIND;
@@ -76,7 +77,8 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSX;
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSY;
     private static final ForgeConfigSpec.DoubleValue SEA_SERPENT_REACH;
-
+    private static final ForgeConfigSpec.DoubleValue SOUL_FRACTURE_STRENGTH;
+    
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
     private static final ForgeConfigSpec.IntValue HARDCORE_ICON_SIZE;
@@ -422,6 +424,10 @@ public final class Config {
         
         NARRATOR_KEYBIND = BUILDER.comment("If for some reason you want to bring the narrator keybind back, set this to true").define("narratorKeybind", false);
         
+        SOUL_FRACTURE_STRENGTH = BUILDER.comment("Maximum health reduction per level of the Soul Fracture effect (1.0 = 100%)").defineInRange("soulFractureStrength", 0.02D, 0.0D, 1.0D);
+        
+        STARLIGHT_PORTAL_ITEM = BUILDER.comment("Item used to activate the portal leading to the Starlight dimensionn").define("starlightPortalItem", "minecraft:enchanted_golden_apple");
+      
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
@@ -453,6 +459,7 @@ public final class Config {
     public static ResourceKey<Biome> apostleSuperbossBiome;
     public static ResourceLocation enchantmentSecondaryCostItem;
     public static ResourceLocation tradingCostItem;
+    public static ResourceLocation starlightPortalItem;
     public static Range enchantmentSecondaryCost;
     public static TagKey<Biome> ritualEndBiome;
     public static TagKey<Biome> ritualAdeptNetherBiome;
@@ -471,8 +478,7 @@ public final class Config {
     public static double hardcoreIconPosX;
     public static double hardcoreIconPosY;
     public static double seaSerpentReach;
-    public static double forsakenSporeDamageDealt;
-    public static double forsakenSporeDamageTaken;
+    public static double soulFractureStrength;
     
     public static int worldgenType;
     public static int hardcoreLivesCount;
@@ -557,6 +563,8 @@ public final class Config {
         gamestageSkillCapExpert = Math.max(gamestageSkillCapNormal, GAMESTAGE_SKILL_CAP_EXPERT.get());
         gamestageSkillCapMaster = Math.max(gamestageSkillCapExpert, GAMESTAGE_SKILL_CAP_MASTER.get());
         narratorKeybind = NARRATOR_KEYBIND.get();
+        soulFractureStrength = SOUL_FRACTURE_STRENGTH.get();
+        starlightPortalItem = new ResourceLocation(STARLIGHT_PORTAL_ITEM.get());
     }
     
     // =========================================================
