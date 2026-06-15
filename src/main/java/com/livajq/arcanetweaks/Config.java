@@ -1,6 +1,7 @@
 package com.livajq.arcanetweaks;
 
 import com.Polarice3.Goety.utils.MathHelper;
+import com.livajq.arcanetweaks.common.item.BlockItemOfSilly;
 import com.livajq.arcanetweaks.mobs.MobStats;
 import net.bandit.reskillable.common.commands.skills.SkillAttributeBonus;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class Config {
@@ -46,6 +48,10 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> VILLAGER_BOOK_BLACKLIST;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTMENT_TIERS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_REPLACEMENTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_EFFECT_WEIGHT;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_POSITIVE_EFFECTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_NEGATIVE_EFFECTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_ITEMS;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -66,6 +72,7 @@ public final class Config {
     
     private static final ForgeConfigSpec.BooleanValue HARDCORE_ICON_VISIBLE;
     private static final ForgeConfigSpec.BooleanValue NARRATOR_KEYBIND;
+    private static final ForgeConfigSpec.BooleanValue BLOCK_SILLY_ENABLED;
     
     private static final ForgeConfigSpec.DoubleValue OBLITERATOR_DAMAGE_CAP;
     private static final ForgeConfigSpec.DoubleValue OBLITERATOR_GROUND_NUKE_DAMAGE_FLAT;
@@ -78,6 +85,7 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSY;
     private static final ForgeConfigSpec.DoubleValue SEA_SERPENT_REACH;
     private static final ForgeConfigSpec.DoubleValue SOUL_FRACTURE_STRENGTH;
+    private static final ForgeConfigSpec.DoubleValue BLOCK_SILLY_CHANCE;
     
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
@@ -98,6 +106,8 @@ public final class Config {
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_NORMAL;
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_EXPERT;
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_MASTER;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_GIVE_ITEMS_ROLLS;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_STEAL_ITEMS_ROLLS;
    
     static {
         BUILDER.push("Mobs");
@@ -390,6 +400,64 @@ public final class Config {
         
         BUILDER.pop();
         
+        BUILDER.push("Block of Silly");
+        
+        BLOCK_SILLY_ENABLED = BUILDER.comment("Whether the Block of Silly can generate in the world").define("blockSillyEnabled", true);
+        BLOCK_SILLY_CHANCE = BUILDER.comment("Chance for the Block of Silly to replace a random ore block during generation (in %)").defineInRange("blockSillyChance", 0.1D, 0.0D, 100.0D);
+        
+        BLOCK_SILLY_EFFECT_WEIGHT = BUILDER
+                .comment("Weight for each Block of Silly effect. Bigger = more common. 0 = off",
+                        "This option automatically lists all available effects on first load",
+                        "You can delete this option and restart the game to generate them again (if more appear with updates or just to restore them)")
+                .defineListAllowEmpty(
+                        List.of("blockSillyEffectWeight"),
+                        Arrays.stream(BlockItemOfSilly.SillyEffect.values())
+                                .map(e -> e.getId() + "=" + e.getDefaultWeight())
+                                .collect(Collectors.toList()),
+                        o -> o instanceof String s && s.matches("[a-z_]+=\\d+")
+                );
+        
+        BLOCK_SILLY_POSITIVE_EFFECTS = BUILDER
+                .comment("Potion effects applied when the 'positive potion effects' effect is rolled",
+                        "Format: effect;amplifier;duration ticks",
+                        "Example: minecraft:strength;1;300")
+                .defineListAllowEmpty(
+                        List.of("blockSillyPositiveEffects"),
+                        List.of("minecraft:strength;1;300",
+                                "minecraft:haste;2;300",
+                                "minecraft:regeneration;5;300"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_NEGATIVE_EFFECTS = BUILDER
+                .comment("Potion effects applied when the 'negative potion effects' effect is rolled",
+                        "Format: effect;amplifier;duration ticks",
+                        "Example: minecraft:poison;1;300")
+                .defineListAllowEmpty(
+                        List.of("blockSillyNegativeEffects"),
+                        List.of("minecraft:poison;1;300",
+                                "minecraft:wither;2;300",
+                                "minecraft:slowness;5;300"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_ITEMS = BUILDER
+                .comment("List from which items will be rolled when the 'give items' effect is rolled",
+                        "Format: item;count",
+                        "Example: minecraft:diamond;7")
+                .defineListAllowEmpty(
+                        List.of("blockSillyItems"),
+                        List.of("minecraft:diamond;7",
+                                "minecraft:gold_ingot;15",
+                                "minecraft:ender_pearl;5"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_GIVE_ITEMS_ROLLS = BUILDER.comment("Number of rolls for the 'give items' effect").defineInRange("blockSillyGiveItemRolls", 3, 1, 100);
+        BLOCK_SILLY_STEAL_ITEMS_ROLLS = BUILDER.comment("Number of rolls for the 'steal items' effect").defineInRange("blockSillyStealItemRolls", 3, 1, 100);
+        
+        BUILDER.pop();
+        
         BUILDER.push("Misc");
         
         WORLDGEN_TYPE = BUILDER
@@ -451,9 +519,13 @@ public final class Config {
     public static Map<SkillAttributeBonus, Supplier<Attribute>> reskillableAttributeBonuses = new HashMap<>();
     public static Map<EntityType<?>, MobStats> mobAttributeModifiers = new HashMap<>();
     public static Map<ResourceLocation, Integer> enchantmentTiers = new HashMap<>();
+    public static Map<BlockItemOfSilly.SillyEffect, Integer> blockSillyEffectWeight;
  
     public static List<String> deathMessages;
     public static List<String> lostCitiesDoors;
+    public static List<String> blockSillyPositiveEffects;
+    public static List<String> blockSillyNegativeEffects;
+    public static List<String> blockSillyItems;
     public static List<MobReplacement> mobReplacements;
     
     public static ResourceKey<Biome> apostleSuperbossBiome;
@@ -467,6 +539,7 @@ public final class Config {
     
     public static boolean hardcoreIconVisible;
     public static boolean narratorKeybind;
+    public static boolean blockSillyEnabled;
     
     public static double obliteratorDamageCap;
     public static double obliteratorGroundNukeDamageFlat;
@@ -479,6 +552,7 @@ public final class Config {
     public static double hardcoreIconPosY;
     public static double seaSerpentReach;
     public static double soulFractureStrength;
+    public static double blockSillyChance;
     
     public static int worldgenType;
     public static int hardcoreLivesCount;
@@ -499,6 +573,8 @@ public final class Config {
     public static int gamestageSkillCapNormal;
     public static int gamestageSkillCapExpert;
     public static int gamestageSkillCapMaster;
+    public static int blockSillyGiveItemsRolls;
+    public static int blockSillyStealItemsRolls;
     
     // =========================================================
     // Sync
@@ -565,6 +641,14 @@ public final class Config {
         narratorKeybind = NARRATOR_KEYBIND.get();
         soulFractureStrength = SOUL_FRACTURE_STRENGTH.get();
         starlightPortalItem = new ResourceLocation(STARLIGHT_PORTAL_ITEM.get());
+        blockSillyEffectWeight = parseBlockSillyEffectWeight();
+        blockSillyPositiveEffects = new ArrayList<>(BLOCK_SILLY_POSITIVE_EFFECTS.get());
+        blockSillyNegativeEffects = new ArrayList<>(BLOCK_SILLY_NEGATIVE_EFFECTS.get());
+        blockSillyEnabled = BLOCK_SILLY_ENABLED.get();
+        blockSillyChance = BLOCK_SILLY_CHANCE.get();
+        blockSillyItems = new ArrayList<>(BLOCK_SILLY_ITEMS.get());
+        blockSillyGiveItemsRolls = BLOCK_SILLY_GIVE_ITEMS_ROLLS.get();
+        blockSillyStealItemsRolls = BLOCK_SILLY_STEAL_ITEMS_ROLLS.get();
     }
     
     // =========================================================
@@ -732,6 +816,62 @@ public final class Config {
         return list;
     }
     
+    public static Map<BlockItemOfSilly.SillyEffect, Integer> parseBlockSillyEffectWeight() {
+        return BLOCK_SILLY_EFFECT_WEIGHT.get().stream()
+                .map(s -> s.split("="))
+                .filter(parts -> parts.length == 2)
+                .flatMap(parts -> {
+                    try {
+                        int weight = Integer.parseInt(parts[1].trim());
+                        return Arrays.stream(BlockItemOfSilly.SillyEffect.values())
+                                .filter(e -> e.getId().equals(parts[0].trim()))
+                                .map(e -> Map.entry(e, weight));
+                    } catch (NumberFormatException e) {
+                        ArcaneTweaks.LOGGER.warn("Invalid weight in blockSillyEffectWeight: {}", parts[1]);
+                        return Stream.empty();
+                    }
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+    
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}
+   
+    public record SillyEffects(ResourceLocation effect, int amplifier, int duration) {
+        public static SillyEffects parse(String s) {
+            String[] parts = s.split(";");
+            return new SillyEffects(
+                    new ResourceLocation(parts[0]),
+                    Integer.parseInt(parts[1]),
+                    Integer.parseInt(parts[2])
+            );
+        }
+        
+        public static List<SillyEffects> getPositiveEffects() {
+            return blockSillyPositiveEffects.stream()
+                    .map(s -> parse((String) s))
+                    .toList();
+        }
+        
+        public static List<SillyEffects> getNegativeEffects() {
+            return blockSillyNegativeEffects.stream()
+                    .map(s -> parse((String) s))
+                    .toList();
+        }
+    }
+    public record SillyItems(ResourceLocation item, int count) {
+        public static SillyItems parse(String s) {
+            String[] parts = s.split(";");
+            return new SillyItems(
+                    new ResourceLocation(parts[0]),
+                    Integer.parseInt(parts[1])
+            );
+        }
+        
+        public static List<SillyItems> getItems() {
+            return Config.blockSillyItems.stream()
+                    .map(s -> SillyItems.parse((String) s))
+                    .toList();
+        }
+    }
 }

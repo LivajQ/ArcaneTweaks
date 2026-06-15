@@ -10,9 +10,7 @@ import com.livajq.arcanetweaks.compat.goety.ritualtype.ExpertNetherCustomRitualT
 import com.livajq.arcanetweaks.handlers.PacketHandler;
 import com.livajq.arcanetweaks.handlers.ResistanceHandler;
 import com.livajq.arcanetweaks.handlers.ResourceReloadHandler;
-import com.livajq.arcanetweaks.init.ArcaneBiomeSources;
-import com.livajq.arcanetweaks.init.ArcaneEntities;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
+import com.livajq.arcanetweaks.init.*;
 import com.livajq.arcanetweaks.util.SpecialDeathMessages;
 import com.livajq.arcanetweaks.world.level.storage.loot.predicates.ModLootConditions;
 import com.mojang.logging.LogUtils;
@@ -52,6 +50,8 @@ public class ArcaneTweaks {
         ArcaneEntities.ENTITY_TYPES.register(modEventBus);
         modEventBus.addListener(ArcaneEntities::onRegisterAttributes);
         ArcaneSounds.SOUNDS.register(modEventBus);
+        ArcaneBlocks.BLOCKS.register(modEventBus);
+        ArcaneItems.ITEMS.register(modEventBus);
         modEventBus.addListener(this::onRegister);
         
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC, MODID + "/arcanetweaks.toml");

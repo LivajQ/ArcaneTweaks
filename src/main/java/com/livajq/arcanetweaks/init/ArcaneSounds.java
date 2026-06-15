@@ -3,9 +3,13 @@ package com.livajq.arcanetweaks.init;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 public class ArcaneSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS =
@@ -42,4 +46,10 @@ public class ArcaneSounds {
     public static final RegistryObject<SoundEvent> FUNNEHSOUND =
             SOUNDS.register("funnehsound",
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "funnehsound")));
+    
+    public static final RegistryObject<SoundEvent> BLOCK_OF_SILLY_MINE =
+            SOUNDS.register("block_of_silly_mine",
+                    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "block_of_silly_mine")));
+    
+    public static final Supplier<SoundType> BLOCK_OF_SILLY = () -> new SoundType(1.0f, 1.3f, BLOCK_OF_SILLY_MINE.get(), SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL);
 }
