@@ -29,7 +29,7 @@
     "goety.ApostleMixin",
     "goety.ItemEventsMixin",
     "reskillable.SkillAttributeBonusMixin",
-    "reskillable.SkillModelMixin",
+    "reskillable.RequestLevelUpMixin",
     "ironsspellbooks.FurledMapItemMixin",
     "ironsspellbooks.ServerPlayerEventsMixin",
     "alexscaves.ACBiomeRegistryMixin",
