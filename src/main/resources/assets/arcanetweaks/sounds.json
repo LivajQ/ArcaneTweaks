@@ -38,5 +38,10 @@
     "sounds": [
       { "name": "arcanetweaks:funnehsound" }
     ]
+  },
+  "block_of_silly_mine": {
+    "sounds": [
+      { "name": "arcanetweaks:block_of_silly_mine" }
+    ]
   }
 }

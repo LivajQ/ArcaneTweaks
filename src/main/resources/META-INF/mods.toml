@@ -75,7 +75,7 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="irons_spellbooks"
 mandatory=true
-versionRange="[1.20.1-3.15.2,)"
+versionRange="[1.20.1-3.16.0,)"
 ordering="AFTER"
 side="BOTH"
 
@@ -104,13 +104,6 @@ side="CLIENT"
 modId="traveloptics"
 mandatory=true
 versionRange="[6.3.0-1.20.1,)"
-ordering="AFTER"
-side="BOTH"
-
-[[dependencies.${mod_id}]]
-modId="lostworlds"
-mandatory=true
-versionRange="[1.20-0.0.3,)"
 ordering="AFTER"
 side="BOTH"
 
@@ -165,7 +158,7 @@ side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="spore"
-mandatory=true
+mandatory=false
 versionRange="[2.2.0,)"
 ordering="AFTER"
 side="BOTH"
@@ -181,5 +174,12 @@ side="BOTH"
 modId="attributeslib"
 mandatory=false
 versionRange="[1.3.7,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="spelunkery"
+mandatory=false
+versionRange="[1.20.1-0.3.16,)"
 ordering="AFTER"
 side="BOTH"

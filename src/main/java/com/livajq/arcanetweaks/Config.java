@@ -1,6 +1,7 @@
 package com.livajq.arcanetweaks;
 
 import com.Polarice3.Goety.utils.MathHelper;
+import com.livajq.arcanetweaks.common.item.BlockItemOfSilly;
 import com.livajq.arcanetweaks.mobs.MobStats;
 import net.bandit.reskillable.common.commands.skills.SkillAttributeBonus;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class Config {
@@ -46,6 +48,10 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> VILLAGER_BOOK_BLACKLIST;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANTMENT_TIERS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_REPLACEMENTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_EFFECT_WEIGHT;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_POSITIVE_EFFECTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_NEGATIVE_EFFECTS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_ITEMS;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -62,18 +68,11 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_RANGE;
     private static final ForgeConfigSpec.ConfigValue<String> ENCHANTMENT_SECONDARY_COST_ITEM;
     private static final ForgeConfigSpec.ConfigValue<String> TRADING_COST_ITEM;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_VAMPIRIC;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_CALCIFIED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_BEZERK;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_TOXIC;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_ROTTEN;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_REINFORCED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_SKELETAL;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_DROWNED;
-    private static final ForgeConfigSpec.ConfigValue<String> SPORE_MUTATION_EFFECT_CHARRED;
+    private static final ForgeConfigSpec.ConfigValue<String> STARLIGHT_PORTAL_ITEM;
     
     private static final ForgeConfigSpec.BooleanValue HARDCORE_ICON_VISIBLE;
     private static final ForgeConfigSpec.BooleanValue NARRATOR_KEYBIND;
+    private static final ForgeConfigSpec.BooleanValue BLOCK_SILLY_ENABLED;
     
     private static final ForgeConfigSpec.DoubleValue OBLITERATOR_DAMAGE_CAP;
     private static final ForgeConfigSpec.DoubleValue OBLITERATOR_GROUND_NUKE_DAMAGE_FLAT;
@@ -85,8 +84,8 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSX;
     private static final ForgeConfigSpec.DoubleValue HARDCORE_ICON_POSY;
     private static final ForgeConfigSpec.DoubleValue SEA_SERPENT_REACH;
-    private static final ForgeConfigSpec.DoubleValue FORSAKEN_SPORE_DMG_DEALT;
-    private static final ForgeConfigSpec.DoubleValue FORSAKEN_SPORE_DMG_TAKEN;
+    private static final ForgeConfigSpec.DoubleValue SOUL_FRACTURE_STRENGTH;
+    private static final ForgeConfigSpec.DoubleValue BLOCK_SILLY_CHANCE;
     
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
@@ -107,6 +106,8 @@ public final class Config {
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_NORMAL;
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_EXPERT;
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_MASTER;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_GIVE_ITEMS_ROLLS;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_STEAL_ITEMS_ROLLS;
    
     static {
         BUILDER.push("Mobs");
@@ -192,13 +193,6 @@ public final class Config {
                         o -> o instanceof String
                 );
 
-        BUILDER.pop();
-        
-        BUILDER.push("Forsaken");
-        
-        FORSAKEN_SPORE_DMG_DEALT = BUILDER.comment("Multiplier for the damage dealt to Spore mobs by Forsaken").defineInRange("forsakenSporeDmgDealt", 15.0D, -1000.0D, 1000.0D);
-        FORSAKEN_SPORE_DMG_TAKEN = BUILDER.comment("Multiplier for the damage taken by Forsaken from Spore mobs").defineInRange("forsakenSporeDmgTaken", 0.05D, 1000.0D, 1000.0D);
-        
         BUILDER.pop();
         
         SEA_SERPENT_REACH = BUILDER.comment("Attack reach bonus for sea serpents. 0.5 = 50% extra reach etc.").defineInRange("seaSerpentReach", 1.0D, -1000.0D, 1000.0D);
@@ -397,31 +391,70 @@ public final class Config {
         
         BUILDER.pop();
         
-        BUILDER.push("Spore");
-        BUILDER.comment("Effect applied for each mutation. Armor when equipped, weapons when held");
-        BUILDER.comment("Pattern: id;duration;amplifier");
-        BUILDER.comment("Example: minecraft:regeneration;200;1");
-        BUILDER.comment("Effect amplifier is doubled for direct injections. Amplifiers stack the more of the same mutation's used on equipped items");
-        
-        SPORE_MUTATION_EFFECT_VAMPIRIC = BUILDER.comment("Vampiric").define("sporeMutationEffectVampiric", "minecraft:regeneration;200;1");
-        SPORE_MUTATION_EFFECT_CALCIFIED = BUILDER.comment("Calcified").define("sporeMutationEffectCalcified", "minecraft:resistance;200;1");
-        SPORE_MUTATION_EFFECT_BEZERK = BUILDER.comment("Bezerk").define("sporeMutationEffectBezerk", "minecraft:haste;200;1");
-        SPORE_MUTATION_EFFECT_TOXIC = BUILDER.comment("Toxic").define("sporeMutationEffectToxic", "minecraft:poison;200;1");
-        SPORE_MUTATION_EFFECT_ROTTEN = BUILDER.comment("Rotten").define("sporeMutationEffectRotten", "minecraft:wither;200;1");
-        
-        SPORE_MUTATION_EFFECT_REINFORCED = BUILDER.comment("Reinforced").define("sporeMutationEffectReinforced", "minecraft:absorption;200;1");
-        SPORE_MUTATION_EFFECT_SKELETAL = BUILDER.comment("Skeletal").define("sporeMutationEffectSkeletal", "minecraft:resistance;200;1");
-        SPORE_MUTATION_EFFECT_DROWNED = BUILDER.comment("Drowned").define("sporeMutationEffectDrowned", "minecraft:water_breathing;200;1");
-        SPORE_MUTATION_EFFECT_CHARRED = BUILDER.comment("Charred").define("sporeMutationEffectCharred", "minecraft:fire_resistance;200;1");
-        
-        BUILDER.pop();
-        
         BUILDER.push("Resistances");
         
         RESISTANCE_AMOUNT = BUILDER.comment("Damage reduced by the resistance effect per level (0 - 1)").defineInRange("resistanceAmount", 0.1D, 0.0D, 1.0D);
         FIRE_RESISTANCE_AMOUNT = BUILDER.comment("Fire damage reduced by the fire resistance effect per level (0 - 1)").defineInRange("fireResistanceAmount", 0.1D, 0.0D, 1.0D);
         ICE_RESISTANCE_AMOUNT = BUILDER.comment("Ice damage reduced by the ice resistance effect per level (0 - 1)").defineInRange("iceResistanceAmount", 0.1D, 0.0D, 1.0D);
         LIGHTNING_RESISTANCE_AMOUNT = BUILDER.comment("Lightning damage reduced by the lightning resistance effect per level (0 - 1)").defineInRange("lightningResistanceAmount", 0.1D, 0.0D, 1.0D);
+        
+        BUILDER.pop();
+        
+        BUILDER.push("Block of Silly");
+        
+        BLOCK_SILLY_ENABLED = BUILDER.comment("Whether the Block of Silly can generate in the world").define("blockSillyEnabled", true);
+        BLOCK_SILLY_CHANCE = BUILDER.comment("Chance for the Block of Silly to replace a random ore block during generation (in %)").defineInRange("blockSillyChance", 0.1D, 0.0D, 100.0D);
+        
+        BLOCK_SILLY_EFFECT_WEIGHT = BUILDER
+                .comment("Weight for each Block of Silly effect. Bigger = more common. 0 = off",
+                        "This option automatically lists all available effects on first load",
+                        "You can delete this option and restart the game to generate them again (if more appear with updates or just to restore them)")
+                .defineListAllowEmpty(
+                        List.of("blockSillyEffectWeight"),
+                        Arrays.stream(BlockItemOfSilly.SillyEffect.values())
+                                .map(e -> e.getId() + "=" + e.getDefaultWeight())
+                                .collect(Collectors.toList()),
+                        o -> o instanceof String s && s.matches("[a-z_]+=\\d+")
+                );
+        
+        BLOCK_SILLY_POSITIVE_EFFECTS = BUILDER
+                .comment("Potion effects applied when the 'positive potion effects' effect is rolled",
+                        "Format: effect;amplifier;duration ticks",
+                        "Example: minecraft:strength;1;300")
+                .defineListAllowEmpty(
+                        List.of("blockSillyPositiveEffects"),
+                        List.of("minecraft:strength;1;300",
+                                "minecraft:haste;2;300",
+                                "minecraft:regeneration;5;300"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_NEGATIVE_EFFECTS = BUILDER
+                .comment("Potion effects applied when the 'negative potion effects' effect is rolled",
+                        "Format: effect;amplifier;duration ticks",
+                        "Example: minecraft:poison;1;300")
+                .defineListAllowEmpty(
+                        List.of("blockSillyNegativeEffects"),
+                        List.of("minecraft:poison;1;300",
+                                "minecraft:wither;2;300",
+                                "minecraft:slowness;5;300"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_ITEMS = BUILDER
+                .comment("List from which items will be rolled when the 'give items' effect is rolled",
+                        "Format: item;count",
+                        "Example: minecraft:diamond;7")
+                .defineListAllowEmpty(
+                        List.of("blockSillyItems"),
+                        List.of("minecraft:diamond;7",
+                                "minecraft:gold_ingot;15",
+                                "minecraft:ender_pearl;5"),
+                        o -> o instanceof String
+                );
+        
+        BLOCK_SILLY_GIVE_ITEMS_ROLLS = BUILDER.comment("Number of rolls for the 'give items' effect").defineInRange("blockSillyGiveItemRolls", 3, 1, 100);
+        BLOCK_SILLY_STEAL_ITEMS_ROLLS = BUILDER.comment("Number of rolls for the 'steal items' effect").defineInRange("blockSillyStealItemRolls", 3, 1, 100);
         
         BUILDER.pop();
         
@@ -459,6 +492,10 @@ public final class Config {
         
         NARRATOR_KEYBIND = BUILDER.comment("If for some reason you want to bring the narrator keybind back, set this to true").define("narratorKeybind", false);
         
+        SOUL_FRACTURE_STRENGTH = BUILDER.comment("Maximum health reduction per level of the Soul Fracture effect (1.0 = 100%)").defineInRange("soulFractureStrength", 0.02D, 0.0D, 1.0D);
+        
+        STARLIGHT_PORTAL_ITEM = BUILDER.comment("Item used to activate the portal leading to the Starlight dimensionn").define("starlightPortalItem", "minecraft:enchanted_golden_apple");
+      
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
@@ -482,30 +519,27 @@ public final class Config {
     public static Map<SkillAttributeBonus, Supplier<Attribute>> reskillableAttributeBonuses = new HashMap<>();
     public static Map<EntityType<?>, MobStats> mobAttributeModifiers = new HashMap<>();
     public static Map<ResourceLocation, Integer> enchantmentTiers = new HashMap<>();
+    public static Map<BlockItemOfSilly.SillyEffect, Integer> blockSillyEffectWeight;
  
     public static List<String> deathMessages;
     public static List<String> lostCitiesDoors;
+    public static List<String> blockSillyPositiveEffects;
+    public static List<String> blockSillyNegativeEffects;
+    public static List<String> blockSillyItems;
     public static List<MobReplacement> mobReplacements;
     
     public static ResourceKey<Biome> apostleSuperbossBiome;
     public static ResourceLocation enchantmentSecondaryCostItem;
     public static ResourceLocation tradingCostItem;
+    public static ResourceLocation starlightPortalItem;
     public static Range enchantmentSecondaryCost;
     public static TagKey<Biome> ritualEndBiome;
     public static TagKey<Biome> ritualAdeptNetherBiome;
     public static TagKey<Biome> ritualExpertNetherBiome;
-    public static SporeMutationEffect sporeMutationEffectVampiric;
-    public static SporeMutationEffect sporeMutationEffectCalcified;
-    public static SporeMutationEffect sporeMutationEffectBezerk;
-    public static SporeMutationEffect sporeMutationEffectToxic;
-    public static SporeMutationEffect sporeMutationEffectRotten;
-    public static SporeMutationEffect sporeMutationEffectReinforced;
-    public static SporeMutationEffect sporeMutationEffectSkeletal;
-    public static SporeMutationEffect sporeMutationEffectDrowned;
-    public static SporeMutationEffect sporeMutationEffectCharred;
     
     public static boolean hardcoreIconVisible;
     public static boolean narratorKeybind;
+    public static boolean blockSillyEnabled;
     
     public static double obliteratorDamageCap;
     public static double obliteratorGroundNukeDamageFlat;
@@ -517,8 +551,8 @@ public final class Config {
     public static double hardcoreIconPosX;
     public static double hardcoreIconPosY;
     public static double seaSerpentReach;
-    public static double forsakenSporeDamageDealt;
-    public static double forsakenSporeDamageTaken;
+    public static double soulFractureStrength;
+    public static double blockSillyChance;
     
     public static int worldgenType;
     public static int hardcoreLivesCount;
@@ -539,6 +573,8 @@ public final class Config {
     public static int gamestageSkillCapNormal;
     public static int gamestageSkillCapExpert;
     public static int gamestageSkillCapMaster;
+    public static int blockSillyGiveItemsRolls;
+    public static int blockSillyStealItemsRolls;
     
     // =========================================================
     // Sync
@@ -586,8 +622,6 @@ public final class Config {
         dragonNukeColorFire = DRAGON_NUKE_COLOR_FIRE.get();
         dragonNukeColorIce = DRAGON_NUKE_COLOR_ICE.get();
         dragonNukeColorLightning = DRAGON_NUKE_COLOR_LIGHTNING.get();
-        forsakenSporeDamageDealt = FORSAKEN_SPORE_DMG_DEALT.get();
-        forsakenSporeDamageTaken = FORSAKEN_SPORE_DMG_TAKEN.get();
         enchantmentSecondaryCost = parseEnchantmentSecondaryCost(ENCHANTMENT_SECONDARY_COST_RANGE.get(), 0.5F, 2.0F);
         enchantmentSecondaryCostItem = new ResourceLocation(ENCHANTMENT_SECONDARY_COST_ITEM.get());
         tradingCostItem = new ResourceLocation(TRADING_COST_ITEM.get());
@@ -605,15 +639,16 @@ public final class Config {
         gamestageSkillCapExpert = Math.max(gamestageSkillCapNormal, GAMESTAGE_SKILL_CAP_EXPERT.get());
         gamestageSkillCapMaster = Math.max(gamestageSkillCapExpert, GAMESTAGE_SKILL_CAP_MASTER.get());
         narratorKeybind = NARRATOR_KEYBIND.get();
-        sporeMutationEffectVampiric = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_VAMPIRIC.get());
-        sporeMutationEffectCalcified = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_CALCIFIED.get());
-        sporeMutationEffectBezerk = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_BEZERK.get());
-        sporeMutationEffectToxic = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_TOXIC.get());
-        sporeMutationEffectRotten = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_ROTTEN.get());
-        sporeMutationEffectReinforced = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_REINFORCED.get());
-        sporeMutationEffectSkeletal = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_SKELETAL.get());
-        sporeMutationEffectDrowned = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_DROWNED.get());
-        sporeMutationEffectCharred = parseSporeMutationEffect(SPORE_MUTATION_EFFECT_CHARRED.get());
+        soulFractureStrength = SOUL_FRACTURE_STRENGTH.get();
+        starlightPortalItem = new ResourceLocation(STARLIGHT_PORTAL_ITEM.get());
+        blockSillyEffectWeight = parseBlockSillyEffectWeight();
+        blockSillyPositiveEffects = new ArrayList<>(BLOCK_SILLY_POSITIVE_EFFECTS.get());
+        blockSillyNegativeEffects = new ArrayList<>(BLOCK_SILLY_NEGATIVE_EFFECTS.get());
+        blockSillyEnabled = BLOCK_SILLY_ENABLED.get();
+        blockSillyChance = BLOCK_SILLY_CHANCE.get();
+        blockSillyItems = new ArrayList<>(BLOCK_SILLY_ITEMS.get());
+        blockSillyGiveItemsRolls = BLOCK_SILLY_GIVE_ITEMS_ROLLS.get();
+        blockSillyStealItemsRolls = BLOCK_SILLY_STEAL_ITEMS_ROLLS.get();
     }
     
     // =========================================================
@@ -781,22 +816,62 @@ public final class Config {
         return list;
     }
     
-    public static SporeMutationEffect parseSporeMutationEffect(String raw) {
-        if (raw == null || raw.isEmpty()) return new SporeMutationEffect(new ResourceLocation("minecraft", "empty"), 0, 0);
-        
-        String[] parts = raw.split(";");
-        if (parts.length != 3) throw new IllegalArgumentException("Invalid mutation effect format: " + raw);
-        
-        ResourceLocation id = new ResourceLocation(parts[0].trim());
-        int duration = Integer.parseInt(parts[1].trim());
-        int amplifier = Integer.parseInt(parts[2].trim());
-        if (duration < 10) duration = 10;
-        if (amplifier < 1) amplifier = 1;
-        
-        return new SporeMutationEffect(id, duration, amplifier - 1);
+    public static Map<BlockItemOfSilly.SillyEffect, Integer> parseBlockSillyEffectWeight() {
+        return BLOCK_SILLY_EFFECT_WEIGHT.get().stream()
+                .map(s -> s.split("="))
+                .filter(parts -> parts.length == 2)
+                .flatMap(parts -> {
+                    try {
+                        int weight = Integer.parseInt(parts[1].trim());
+                        return Arrays.stream(BlockItemOfSilly.SillyEffect.values())
+                                .filter(e -> e.getId().equals(parts[0].trim()))
+                                .map(e -> Map.entry(e, weight));
+                    } catch (NumberFormatException e) {
+                        ArcaneTweaks.LOGGER.warn("Invalid weight in blockSillyEffectWeight: {}", parts[1]);
+                        return Stream.empty();
+                    }
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
     
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}
-    public record SporeMutationEffect(ResourceLocation id, int duration, int amplifier) {}
+   
+    public record SillyEffects(ResourceLocation effect, int amplifier, int duration) {
+        public static SillyEffects parse(String s) {
+            String[] parts = s.split(";");
+            return new SillyEffects(
+                    new ResourceLocation(parts[0]),
+                    Integer.parseInt(parts[1]),
+                    Integer.parseInt(parts[2])
+            );
+        }
+        
+        public static List<SillyEffects> getPositiveEffects() {
+            return blockSillyPositiveEffects.stream()
+                    .map(s -> parse((String) s))
+                    .toList();
+        }
+        
+        public static List<SillyEffects> getNegativeEffects() {
+            return blockSillyNegativeEffects.stream()
+                    .map(s -> parse((String) s))
+                    .toList();
+        }
+    }
+    public record SillyItems(ResourceLocation item, int count) {
+        public static SillyItems parse(String s) {
+            String[] parts = s.split(";");
+            return new SillyItems(
+                    new ResourceLocation(parts[0]),
+                    Integer.parseInt(parts[1])
+            );
+        }
+        
+        public static List<SillyItems> getItems() {
+            return Config.blockSillyItems.stream()
+                    .map(s -> SillyItems.parse((String) s))
+                    .toList();
+        }
+    }
 }

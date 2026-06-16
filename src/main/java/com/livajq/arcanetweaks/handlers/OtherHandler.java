@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.handlers;
 
-import com.eeeab.eeeabsmobs.sever.init.ItemInit;
+import cn.leolezury.eternalstarlight.common.EternalStarlight;
 import com.gametechbc.traveloptics.entity.mobs.nightwarden_boss.NightwardenBossEntity;
 import com.github.L_Ender.cataclysm.world.data.CMWorldData;
 import com.livajq.arcanetweaks.ArcaneTweaks;
@@ -9,7 +9,10 @@ import com.livajq.arcanetweaks.init.ArcaneSounds;
 import com.livajq.arcanetweaks.mixin.vanilla.ChunkGeneratorAccessor;
 import com.livajq.arcanetweaks.world.district.DistrictBiomeSource;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.ordana.spelunkery.reg.ModFluids;
 import insane96mcp.enhancedai.modules.mobs.Leaders;
+import io.redspace.ironsspellbooks.api.entity.IOminousEntity;
+import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,7 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -46,15 +48,15 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -62,17 +64,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.*;
-import java.util.function.Function;
 
 @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID)
 public class OtherHandler {
     
-    private static final ResourceKey<Level> ABYSS = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostworlds", "abyss"));
+    //private static final ResourceKey<Level> ABYSS = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostworlds", "abyss"));
+    private static final ResourceKey<Level> STARLIGHT = ResourceKey.create(Registries.DIMENSION, EternalStarlight.id("starlight"));
     private static final UUID HER_ID = UUID.fromString("7905095f-4e96-43d1-83a0-870265821205");
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
+    private static final String WOMPWOMP_NAME = "Therealcaprisun";
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
     
-    //certain eyes used as dimension teleporters instead. 1 eye now
+    //certain eyes used as dimension teleporters instead. 1 eye now. and nothing now lol
+    /*
     @SubscribeEvent
     public static void onRightClick(PlayerInteractEvent.RightClickItem event) {
         Item item = event.getItemStack().getItem();
@@ -104,6 +108,7 @@ public class OtherHandler {
             }
         });
     }
+     */
     
     //replace vanilla BiomeSource
     //I probably just don't know how to do it like a normal person but json overrides caused modded biomes to stop generating
@@ -125,6 +130,21 @@ public class OtherHandler {
         ((ChunkGeneratorAccessor) generator).setBiomeSource(wrapped);
     }
     
+    //spawn ominous Irons bosses based on dimension
+    @SubscribeEvent
+    public static void handleOminousEntities(EntityJoinLevelEvent event) {
+        if (!(event.getLevel() instanceof ServerLevel serverLevel) || event.loadedFromDisk()) return;
+        
+        var entity = event.getEntity();
+        if (entity instanceof IOminousEntity ominousSettings && !ominousSettings.isOminous() && ominousSettings.canTriggerOminous()) {
+             if (serverLevel.dimension() == STARLIGHT) {
+                 Vec3 center = entity.position();
+                 ominousSettings.onOminousTrigger();
+                 serverLevel.playSound(null, BlockPos.containing(center), SoundRegistry.TRIAL_SPAWNER_OMINOUS_ACTIVATE.get(), SoundSource.BLOCKS, 4, 1.0F);
+             }
+        }
+    }
+
     //constantly spawn particles on the player model
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -317,12 +337,35 @@ public class OtherHandler {
         }
     }
     
+    //apply effects when player is in portal liquid from Spelunkery
+    @SubscribeEvent
+    public static void applyFluidEffects(LivingEvent.LivingTickEvent event) {
+        if (!ModList.get().isLoaded("spelunkery")) return;
+        
+        LivingEntity entity = event.getEntity();
+        if (entity.tickCount % 10 != 0) return;
+        
+        FluidType portal = ModFluids.PORTAL_FLUID.get().getFluidType();
+        FluidType portalFlowing = ModFluids.FLOWING_PORTAL_FLUID.get().getFluidType();
+ 
+        if (entity.isInFluidType(portal) || entity.isInFluidType(portalFlowing)) {
+            MobEffect abyssalBurn = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("cataclysm:abyssal_burn"));
+            MobEffect abyssalCurse = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("cataclysm:abyssal_curse"));
+            MobEffect abyssalFear = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("cataclysm:abyssal_fear"));
+            MobEffect sapped = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("goety:sapped"));
+            if (abyssalBurn != null) entity.addEffect(new MobEffectInstance(abyssalBurn, 110, 0, false, true), entity);
+            if (abyssalCurse != null) entity.addEffect(new MobEffectInstance(abyssalCurse, 110, 0, false, true), entity);
+            if (abyssalFear != null) entity.addEffect(new MobEffectInstance(abyssalFear, 110, 0, false, true), entity);
+            if (sapped != null) entity.addEffect(new MobEffectInstance(sapped, 110, 0, false, true), entity);
+        }
+    }
+    
     //invalidate a certain run :3
     @SubscribeEvent
     public static void onLivingDeathFun(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof NightwardenBossEntity)) return;
         if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (!player.getUUID().equals(WOMPWOMP_ID)) return;
+        if (!player.getUUID().equals(WOMPWOMP_ID) && !player.getGameProfile().getName().equals(WOMPWOMP_NAME)) return;
         if (player.isCreative()) return;
         CompoundTag tag = player.getPersistentData();
         
@@ -334,7 +377,7 @@ public class OtherHandler {
     public static void onPlayerTickFun(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         Player player = event.player;
-        if (!player.getUUID().equals(WOMPWOMP_ID)) return;
+        if (!player.getUUID().equals(WOMPWOMP_ID) && !player.getGameProfile().getName().equals(WOMPWOMP_NAME)) return;
         
         CompoundTag tag = player.getPersistentData();
         

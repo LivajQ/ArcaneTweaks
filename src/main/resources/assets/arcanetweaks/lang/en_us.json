@@ -1,9 +1,24 @@
 {
+  "block.arcanetweaks.block_of_silly": "Block of %s!!",
+  "block.arcanetweaks.block_of_silly.desc.part1": "OMG is so ",
+  "block.arcanetweaks.block_of_silly.desc.silly": "SILLY",
+  "block.arcanetweaks.block_of_silly.desc.part2": "!!1 Bet it got much ",
+  "block.arcanetweaks.block_of_silly.desc.positive": "good stuffs ",
+  "block.arcanetweaks.block_of_silly.desc.part3": "to help!! But :oo what if there also ",
+  "block.arcanetweaks.block_of_silly.desc.negative": "scawy? :d",
+  "block.arcanetweaks.block_of_silly.effect.nuke": "What a funny shiny box! I wonder what it does",
+  "block.arcanetweaks.block_of_silly.effect.give_item": "I brought some gifts... but is not like I like you or anything!!1!",
+  "block.arcanetweaks.block_of_silly.effect.steal_item": ":oooo so cool items! Can I have?",
+  "block.arcanetweaks.block_of_silly.effect.steal_item.fail": "aww you don't have enough for me :c. Oh well, this lung looks cool!",
+  "block.arcanetweaks.block_of_silly.effect.positive_potion_effects": "I hate pills, they make me all strong and stuffs >:(",
+  "block.arcanetweaks.block_of_silly.effect.negative_potion_effects": "Yippee, colorful drinks! And they even glow in the dark!",
+  "block.arcanetweaks.block_of_silly.effect.zeus": "Uh oh, I think Zeus angy :d maybe chocolate will helps",
   "entity.arcanetweaks.test_boss": "Bozo",
   "deathScreen.respawnLives": "Respawn (%s lives remaining)",
   "death.attack.vaporized.0": "%1$s was reduced to atoms.",
   "death.attack.vaporized.1": "%1$s was vaporized.",
   "death.attack.vaporized.2": "%1$s was obliterated.",
   "death.attack.vaporized.3": "%1$s vanished in a flash of draconic fury.",
-  "arcanetweaks.wither_summon_tip": "Check the questbook on how to summon the wither"
+  "arcanetweaks.wither_summon_tip": "Check the questbook on how to summon the wither",
+  "arcanetweaks.starlight_portal_fail": "The portal fails to activate"
 }
