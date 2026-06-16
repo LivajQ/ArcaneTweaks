@@ -37,7 +37,6 @@ public class RequestLevelUpMixin {
 
         SkillModel model = SkillModel.get(player);
         Skill skill = getSkillSafe(skillIndex);
-        System.out.println("hello?");
 
         int level = model.getSkillLevel(skill);
         int maxAllowed = ReskillableUtils.getMaxLevelForGamestage(player);
