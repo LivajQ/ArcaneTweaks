@@ -1,5 +1,6 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.livajq.arcanetweaks.packet.StartSillyRainbowEffectPacket;
 import com.livajq.arcanetweaks.packet.SyncHardcoreLivesPacket;
 import com.livajq.arcanetweaks.packet.UseParcoolStaminaServerPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -22,5 +23,6 @@ public class PacketHandler {
         
         INSTANCE.registerMessage(id++, SyncHardcoreLivesPacket.class, SyncHardcoreLivesPacket::encode, SyncHardcoreLivesPacket::decode, SyncHardcoreLivesPacket::handle);
         INSTANCE.registerMessage(id++, UseParcoolStaminaServerPacket.class, UseParcoolStaminaServerPacket::encode, UseParcoolStaminaServerPacket::decode, UseParcoolStaminaServerPacket::handle);
+        INSTANCE.registerMessage(id++, StartSillyRainbowEffectPacket.class, StartSillyRainbowEffectPacket::encode, StartSillyRainbowEffectPacket::decode, StartSillyRainbowEffectPacket::handle);
     }
 }

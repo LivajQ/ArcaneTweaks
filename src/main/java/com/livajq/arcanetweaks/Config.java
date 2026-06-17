@@ -108,6 +108,8 @@ public final class Config {
     private static final ForgeConfigSpec.IntValue GAMESTAGE_SKILL_CAP_MASTER;
     private static final ForgeConfigSpec.IntValue BLOCK_SILLY_GIVE_ITEMS_ROLLS;
     private static final ForgeConfigSpec.IntValue BLOCK_SILLY_STEAL_ITEMS_ROLLS;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_VISUALS_RADIUS;
+    private static final ForgeConfigSpec.IntValue BLOCK_SILLY_EFFECT_ROLLS;
    
     static {
         BUILDER.push("Mobs");
@@ -404,6 +406,8 @@ public final class Config {
         
         BLOCK_SILLY_ENABLED = BUILDER.comment("Whether the Block of Silly can generate in the world").define("blockSillyEnabled", true);
         BLOCK_SILLY_CHANCE = BUILDER.comment("Chance for the Block of Silly to replace a random ore block during generation (in %)").defineInRange("blockSillyChance", 0.1D, 0.0D, 100.0D);
+        BLOCK_SILLY_EFFECT_ROLLS = BUILDER.comment("How many effects are rolled per one use of the block").defineInRange("blockSillyEffectRolls", 1, 1, 50);
+        BLOCK_SILLY_VISUALS_RADIUS = BUILDER.comment("Radius (in blocks) in which the Block of Silly can apply certain visual effects").defineInRange("blockSillyVisualsRadius", 15, 0, 100);
         
         BLOCK_SILLY_EFFECT_WEIGHT = BUILDER
                 .comment("Weight for each Block of Silly effect. Bigger = more common. 0 = off",
@@ -575,6 +579,8 @@ public final class Config {
     public static int gamestageSkillCapMaster;
     public static int blockSillyGiveItemsRolls;
     public static int blockSillyStealItemsRolls;
+    public static int blockSillyVisualsRadius;
+    public static int blockSillyEffectRolls;
     
     // =========================================================
     // Sync
@@ -649,6 +655,8 @@ public final class Config {
         blockSillyItems = new ArrayList<>(BLOCK_SILLY_ITEMS.get());
         blockSillyGiveItemsRolls = BLOCK_SILLY_GIVE_ITEMS_ROLLS.get();
         blockSillyStealItemsRolls = BLOCK_SILLY_STEAL_ITEMS_ROLLS.get();
+        blockSillyVisualsRadius =  BLOCK_SILLY_VISUALS_RADIUS.get();
+        blockSillyEffectRolls = BLOCK_SILLY_EFFECT_ROLLS.get();
     }
     
     // =========================================================

@@ -4,10 +4,15 @@ import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.item.NuclearBombEntity;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
+import com.livajq.arcanetweaks.handlers.PacketHandler;
+import com.livajq.arcanetweaks.packet.StartSillyRainbowEffectPacket;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,17 +24,18 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
 public class BlockItemOfSilly extends BlockItem {
-    private static final Map<UUID, Integer> zeusTimers = new HashMap<>();
-    private static final Map<UUID, Integer> lungTimers = new HashMap<>();
     
     public BlockItemOfSilly(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
@@ -64,7 +70,7 @@ public class BlockItemOfSilly extends BlockItem {
         ServerLevel level = (ServerLevel) context.getLevel();
         BlockPos pos = context.getClickedPos();
         if (!player.getAbilities().instabuild) context.getItemInHand().shrink(1);
-        doRandomSilly(level, pos, player);
+        for (int x = 0; x < Config.blockSillyEffectRolls; x++) doRandomSilly(level, pos, player);
         return InteractionResult.CONSUME;
     }
     
@@ -124,7 +130,7 @@ public class BlockItemOfSilly extends BlockItem {
                 
                 if (stealable.size() < Config.blockSillyStealItemsRolls) {
                     player.sendSystemMessage(Component.translatable("block.arcanetweaks.block_of_silly.effect.steal_item.fail"));
-                    lungTimers.put(player.getUUID(), 12000);
+                    Handler.lungTimers.put(player.getUUID(), 12000);
                 }
                 for (int i = 0; i < Config.blockSillyStealItemsRolls && !stealable.isEmpty(); i++) {
                     ItemStack target = stealable.remove(level.getRandom().nextInt(stealable.size()));
@@ -150,8 +156,10 @@ public class BlockItemOfSilly extends BlockItem {
                                 }
                             });
             
-            case ZEUS -> zeusTimers.put(player.getUUID(), 2400);
+            case ZEUS -> Handler.zeusTimers.put(player.getUUID(), 2400);
             
+            case RAINBOW -> PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                    new StartSillyRainbowEffectPacket(3600));
         }
     }
     
@@ -161,7 +169,8 @@ public class BlockItemOfSilly extends BlockItem {
         STEAL_ITEM("steal_item", 2),
         POSITIVE_POTION_EFFECTS("positive_potion_effects", 2),
         NEGATIVE_POTION_EFFECTS("negative_potion_effects", 2),
-        ZEUS("zeus", 1);
+        ZEUS("zeus", 1),
+        RAINBOW("rainbow", 2);
         
         private final String id;
         private final int defaultWeight;
@@ -182,6 +191,8 @@ public class BlockItemOfSilly extends BlockItem {
     
     @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID)
     public static class Handler {
+        private static final Map<UUID, Integer> zeusTimers = new HashMap<>();
+        private static final Map<UUID, Integer> lungTimers = new HashMap<>();
         
         @SubscribeEvent
         public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -225,6 +236,45 @@ public class BlockItemOfSilly extends BlockItem {
                 player.setAirSupply(-20);
                 player.hurt(player.level().damageSources().drown(), 2.0F);
                 lungTimers.put(player.getUUID(), remaining - 1);
+            }
+        }
+        
+    }
+    
+    @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID, value = Dist.CLIENT)
+    public static class ClientHandler {
+        private static int rainbowTimer = 0;
+        private static final ResourceLocation RAINBOW = new ResourceLocation(ArcaneTweaks.MODID, "shaders/post/rainbow.json");
+        
+        private static void start() {
+            Minecraft mc = Minecraft.getInstance();
+            mc.execute(() -> {
+                try {
+                    mc.gameRenderer.loadEffect(RAINBOW);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        
+        public static void stop() {
+            Minecraft mc = Minecraft.getInstance();
+            mc.execute(mc.gameRenderer::shutdownEffect);
+        }
+        
+        public static void setRainbowTimer(int duration) {
+            rainbowTimer = duration;
+            start();
+        }
+        
+        @OnlyIn(Dist.CLIENT)
+        @SubscribeEvent
+        public static void clientTick(TickEvent.ClientTickEvent event) {
+            if (event.phase != TickEvent.Phase.END) return;
+            
+            if (rainbowTimer > 0) {
+                rainbowTimer--;
+                if (rainbowTimer == 0) stop();
             }
         }
     }

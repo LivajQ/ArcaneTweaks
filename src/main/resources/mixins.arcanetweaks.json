@@ -16,6 +16,7 @@
     "vanilla.EnchantmentMixin",
     "vanilla.EnchantBookForEmeraldsMixin",
     "vanilla.BlockBehaviourMixin",
+    "vanilla.OreFeatureMixin",
     "betterend.DragonTreeFeatureMixin",
     "betterend.GiganticAmaranitaFeatureMixin",
     "betterend.HelixTreeFeatureMixin",
