@@ -30,6 +30,7 @@
     "goety.ApostleMixin",
     "goety.ItemEventsMixin",
     "reskillable.SkillAttributeBonusMixin",
+    "reskillable.TooltipMixin",
     "reskillable.RequestLevelUpMixin",
     "ironsspellbooks.FurledMapItemMixin",
     "ironsspellbooks.ServerPlayerEventsMixin",
