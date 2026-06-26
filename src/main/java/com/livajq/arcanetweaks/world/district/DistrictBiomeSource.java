@@ -1,9 +1,11 @@
 package com.livajq.arcanetweaks.world.district;
 
 import com.livajq.arcanetweaks.Config;
+import com.livajq.arcanetweaks.UndergroundBiomeConfigLoader;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -11,9 +13,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 //I still have no idea what I'm doing
@@ -31,10 +32,17 @@ public class DistrictBiomeSource extends BiomeSource {
     
     private final Map<TagKey<Biome>, List<Holder<Biome>>> tagCache;
     private final Map<Long, Holder<Biome>> remapCache;
+    private final Map<ResourceKey<Biome>, Holder<Biome>> biomeHolders;
+    
+    private static final int SURFACE_QUART_Y = 80;
     
     public DistrictBiomeSource(BiomeSource delegate, long seed) {
         this.delegate = delegate;
         this.seed = seed;
+        
+        this.biomeHolders = delegate.possibleBiomes().stream()
+                .filter(h -> h.unwrapKey().isPresent())
+                .collect(Collectors.toMap(h -> h.unwrapKey().get(), h -> h));
         
         Map<TagKey<Biome>, List<Holder<Biome>>> tagTmp = new HashMap<>();
         List<Holder<Biome>> possible = delegate.possibleBiomes().stream().toList();
@@ -79,6 +87,28 @@ public class DistrictBiomeSource extends BiomeSource {
         Holder<Biome> original = delegate.getNoiseBiome(quartX, quartY, quartZ, sampler);
         if (original == null) return fallbackBiome();
         
+        Holder <Biome> surfaceBiome = delegate.getNoiseBiome(quartX, SURFACE_QUART_Y, quartZ, sampler);
+        Holder <Biome> currentBiome = delegate.getNoiseBiome(quartX, quartY, quartZ, sampler);
+        
+        if (!Objects.equals(
+                surfaceBiome.unwrapKey().orElse(null),
+                currentBiome.unwrapKey().orElse(null)
+        )) {
+            if (surfaceBiome != null) {
+                List<UndergroundBiomeConfigLoader.UndergroundCandidate> candidates = surfaceBiome.unwrapKey()
+                        .map(UndergroundBiomeConfigLoader.lookupMappings::get)
+                        .orElse(null);
+                if (candidates != null) {
+                    Holder<Biome> underground = selectCandidate(candidates, original, quartY);
+                    if (underground != null) return underground;
+                }
+                else if (UndergroundBiomeConfigLoader.isExclusive(currentBiome)) return surfaceBiome;
+            }
+            return original;
+        }
+        
+        if (Config.worldgenType == 0) return original;
+        
         int blockZ = quartZ << 2;
         DistrictBand band = DistrictBand.fromZ(blockZ);
         
@@ -87,6 +117,28 @@ public class DistrictBiomeSource extends BiomeSource {
         }
         
         return remapBiome(band, original);
+    }
+    
+    private Holder<Biome> selectCandidate(List<UndergroundBiomeConfigLoader.UndergroundCandidate> candidates, Holder<Biome> originalUnderground, int quartY) {
+        List<Holder<Biome>> pool = new ArrayList<>();
+        for (UndergroundBiomeConfigLoader.UndergroundCandidate candidate : candidates) {
+            if (!candidate.meetsConditions(quartY)) continue;
+            List<Holder<Biome>> resolved = candidate.resolveHolders(biomeHolders);
+            for (Holder<Biome> h : resolved) {
+                for (int i = 0; i < candidate.weight(); i++) {
+                    pool.add(h);
+                }
+            }
+        }
+        if (pool.isEmpty()) return null;
+        
+        int biomeHash = originalUnderground.unwrapKey()
+                .map(k -> k.location().toString().hashCode())
+                .orElse(0);
+        long mix = seed ^ (biomeHash & 0xFFFFFFFFL);
+        RandomSource rand = RandomSource.create(mix);
+        
+        return pool.get(rand.nextInt(pool.size()));
     }
     
     private Holder<Biome> fallbackBiome() {

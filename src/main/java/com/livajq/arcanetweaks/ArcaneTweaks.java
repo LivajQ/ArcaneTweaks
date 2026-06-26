@@ -64,9 +64,10 @@ public class ArcaneTweaks {
             RitualType.addRitualType("expert_nether", new ExpertNetherCustomRitualType());
             BossBehaviorRegistry.init();
             BiomeConfigLoader.init();
+            UndergroundBiomeConfigLoader.init();
             PacketHandler.register();
             ResistanceHandler.init();
-            ModEffects.SOUL_FRACTURE.get().addAttributeModifier(Attributes.MAX_HEALTH, "CB3F55D3-645C-4F38-A497-9C13A33DB5CF", Config.soulFractureStrength, AttributeModifier.Operation.MULTIPLY_TOTAL);
+            ModEffects.SOUL_FRACTURE.get().addAttributeModifier(Attributes.MAX_HEALTH, "CB3F55D3-645C-4F38-A497-9C13A33DB5CF", -Config.soulFractureStrength, AttributeModifier.Operation.MULTIPLY_TOTAL);
             
             //ReskillableGenerator.generateReskillableEntries();
             //ItemObliteratorGenerator.generateObliteratorBlacklist();

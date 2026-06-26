@@ -114,7 +114,7 @@ public class OtherHandler {
     //I probably just don't know how to do it like a normal person but json overrides caused modded biomes to stop generating
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLevelLoad(LevelEvent.Load event) {
-        if (Config.worldgenType == 0) return;
+        //if (Config.worldgenType == 0) return;
         if (!(event.getLevel() instanceof ServerLevel level)) return;
         if (!level.dimension().equals(Level.OVERWORLD)) return;
         
@@ -125,6 +125,7 @@ public class OtherHandler {
         ChunkGenerator generator = level.getChunkSource().getGenerator();
         
         BiomeSource vanilla = generator.getBiomeSource();
+        if (vanilla instanceof DistrictBiomeSource) return;
         BiomeSource wrapped = new DistrictBiomeSource(vanilla, level.getSeed());
 
         ((ChunkGeneratorAccessor) generator).setBiomeSource(wrapped);
