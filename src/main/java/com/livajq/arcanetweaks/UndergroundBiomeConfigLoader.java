@@ -28,7 +28,7 @@ public class UndergroundBiomeConfigLoader {
     public static final Map<ResourceKey<Biome>, List<UndergroundCandidate>> lookupMappings = new HashMap<>();
     
     public static void init() {
-        File file = FMLPaths.CONFIGDIR.get().resolve(EternalStarlight.ID).resolve(FILE_NAME).toFile();
+        File file = FMLPaths.CONFIGDIR.get().resolve(ArcaneTweaks.MODID).resolve(FILE_NAME).toFile();
         
         if (!file.exists()) {
             try {
