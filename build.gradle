@@ -103,7 +103,7 @@ dependencies {
     implementation fg.deobf("curse.maven:selene-${moonlight_version}")
     implementation fg.deobf("curse.maven:celestial-overhaul-${celestial_overhaul_version}")
     implementation fg.deobf("curse.maven:hunger-strike-${hunger_strike_version}")
-    //implementation fg.deobf("curse.maven:just-a-lot-more-enchantments-${just_a_lot_more_enchantments_version}")
+    implementation fg.deobf("curse.maven:darker-depths-460681:8189242")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")

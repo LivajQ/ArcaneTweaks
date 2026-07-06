@@ -4,6 +4,7 @@ import com.Polarice3.Goety.api.ritual.RitualType;
 import com.livajq.arcanetweaks.bossbehavior.BossBehaviorRegistry;
 import com.livajq.arcanetweaks.client.renderer.dimensioneffects.EndSkyboxEffects;
 import com.livajq.arcanetweaks.compat.alexscaves.BiomeConfigLoader;
+import com.livajq.arcanetweaks.compat.darkerdepths.BiomeFogConfigLoader;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.AdeptNetherCustomRitualType;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.EndCustomRitualType;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.ExpertNetherCustomRitualType;
@@ -65,6 +66,7 @@ public class ArcaneTweaks {
             BossBehaviorRegistry.init();
             BiomeConfigLoader.init();
             UndergroundBiomeConfigLoader.init();
+            BiomeFogConfigLoader.init();
             PacketHandler.register();
             ResistanceHandler.init();
             ModEffects.SOUL_FRACTURE.get().addAttributeModifier(Attributes.MAX_HEALTH, "CB3F55D3-645C-4F38-A497-9C13A33DB5CF", -Config.soulFractureStrength, AttributeModifier.Operation.MULTIPLY_TOTAL);

@@ -1,6 +1,5 @@
 package com.livajq.arcanetweaks;
 
-import cn.leolezury.eternalstarlight.common.EternalStarlight;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.toml.TomlFormat;
