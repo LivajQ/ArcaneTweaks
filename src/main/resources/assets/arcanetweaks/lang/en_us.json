@@ -21,5 +21,16 @@
   "death.attack.vaporized.2": "%1$s was obliterated.",
   "death.attack.vaporized.3": "%1$s vanished in a flash of draconic fury.",
   "arcanetweaks.wither_summon_tip": "Check the questbook on how to summon the wither",
-  "arcanetweaks.starlight_portal_fail": "The portal fails to activate"
+  "arcanetweaks.starlight_portal_fail": "The portal fails to activate",
+  "arcanetweaks.cannot_mount_here": "The sheer cold makes it impossible to use",
+  "arcanetweaks.dismount_warn_1": "The cold gnaws at your mount’s strength",
+  "arcanetweaks.dismount_warn_2": "Your mount shivers violently in the freezing air",
+  "arcanetweaks.dismount_warn_3": "The frost is starting to overwhelm your mount",
+  "arcanetweaks.dismount_warn_4": "The biting cold is becoming unbearable for your mount",
+  "arcanetweaks.dismount_warn_5": "The icy winds threaten to force your mount to collapse",
+  "arcanetweaks.dismount_strike_1": "The cold lashes out violently",
+  "arcanetweaks.dismount_strike_2": "A surge of frost energy strikes your mount",
+  "arcanetweaks.dismount_strike_3": "The freezing air erupts with dangerous force",
+  "arcanetweaks.dismount_strike_4": "The frost snaps, unleashing a punishing blast",
+  "arcanetweaks.dismount_strike_5": "The icy winds strike with brutal intensity"
 }

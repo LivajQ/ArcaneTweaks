@@ -54,6 +54,7 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_NEGATIVE_EFFECTS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_ITEMS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> SHIELD_BASH_PROPERTIES;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISMOUNT_BIOMES;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -512,6 +513,17 @@ public final class Config {
                         o -> o instanceof String
                 );
         
+        DISMOUNT_BIOMES = BUILDER
+                .comment("Biomes (or tags) which forbid the use of mounts")
+                .defineListAllowEmpty(
+                        List.of("dismountBiomes"),
+                        List.of(
+                                "minecraft:plains",
+                                "#forge:is_peak"
+                        ),
+                        o -> o instanceof String
+                );
+        
         NARRATOR_KEYBIND = BUILDER.comment("If for some reason you want to bring the narrator keybind back, set this to true").define("narratorKeybind", false);
         
         SOUL_FRACTURE_STRENGTH = BUILDER.comment("Maximum health reduction per level of the Soul Fracture effect (1.0 = 100%)").defineInRange("soulFractureStrength", 0.02D, 0.0D, 1.0D);
@@ -535,6 +547,7 @@ public final class Config {
     public static Set<String> emiRecipeWhitelistSet;
     public static Set<String> dragonNukeImmuneSet;
     public static Set<String> villagerBookBlacklistSet;
+    public static Set<String> dismountBiomesSet;
  
     public static Map<ResourceLocation, Set<ResourceLocation>> extraPlantSurfaces = new HashMap<>();
     public static Map<ResourceLocation, Set<ResourceLocation>> extraPlantSurfacesWater = new HashMap<>();
@@ -679,6 +692,7 @@ public final class Config {
         blockSillyEffectRolls = BLOCK_SILLY_EFFECT_ROLLS.get();
         shieldBashProperties = parseShieldBashProperties();
         mobKillHealAmount = MOB_KILL_HEAL_AMOUNT.get();
+        dismountBiomesSet = new HashSet<>(DISMOUNT_BIOMES.get());
     }
     
     // =========================================================
@@ -896,7 +910,6 @@ public final class Config {
         
         return map;
     }
-    
     
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}

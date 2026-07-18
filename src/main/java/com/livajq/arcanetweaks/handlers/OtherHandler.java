@@ -13,10 +13,12 @@ import com.ordana.spelunkery.reg.ModFluids;
 import insane96mcp.enhancedai.modules.mobs.Leaders;
 import io.redspace.ironsspellbooks.api.entity.IOminousEntity;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -31,10 +33,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,6 +42,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.phys.AABB;
@@ -52,6 +52,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -66,6 +67,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = ArcaneTweaks.MODID)
 public class OtherHandler {
@@ -76,6 +78,7 @@ public class OtherHandler {
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
     private static final String WOMPWOMP_NAME = "Therealcaprisun";
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
+    private static final Map<Player, Integer> ENTERED_DISMOUNT_BIOME_TICK = new HashMap<>();
     
     //certain eyes used as dimension teleporters instead. 1 eye now. and nothing now lol
     /*
@@ -264,6 +267,63 @@ public class OtherHandler {
         );
     }
     
+    //periodically check the biome the player is in and dismount in blacklisted ones
+    @SubscribeEvent
+    public static void onPlayerTick2(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        
+        Player player = event.player;
+        if (player == null) return;
+        if (player.tickCount % 20 != 0) return;
+        if (player.level().isClientSide) return;
+        if (!player.isPassenger()) return;
+    
+        boolean blacklisted = isDismountBiome(player);
+        
+        if (blacklisted) {
+            if (ENTERED_DISMOUNT_BIOME_TICK.containsKey(player)) {
+                if (player.tickCount - ENTERED_DISMOUNT_BIOME_TICK.get(player) > 120) {
+                    LightningBolt lightning = new LightningBolt(EntityType.LIGHTNING_BOLT, player.level());
+                    lightning.setPos(player.position());
+                    player.level().addFreshEntity(lightning);
+                    player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".dismount_strike_" + (player.getRandom().nextInt(5) + 1))
+                            .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
+                    player.dismountTo(player.getX(), player.getY(), player.getZ());
+                }
+            }
+            else {
+                ENTERED_DISMOUNT_BIOME_TICK.put(player, player.tickCount);
+                player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".dismount_warn_" + (player.getRandom().nextInt(5) + 1))
+                        .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public static void onEntityMount(EntityMountEvent event) {
+        if (!(event.getEntityMounting() instanceof Player player)) return;
+        if (!(event.getEntityBeingMounted() instanceof LivingEntity)) return;
+        if (event.isDismounting()) return;
+        
+        if (isDismountBiome(player)) {
+            event.setCanceled(true);
+            if (!event.getLevel().isClientSide) player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".cannot_mount_here")
+                    .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
+        }
+        else ENTERED_DISMOUNT_BIOME_TICK.remove(player);
+    }
+    
+    private static boolean isDismountBiome(Player player) {
+        Set<String> ids = Config.dismountBiomesSet.stream().filter(s -> !s.startsWith("#")).collect(Collectors.toSet());
+        Set<String> tags = Config.dismountBiomesSet.stream().filter(s -> s.startsWith("#")).map(s -> s.substring(1)).collect(Collectors.toSet());
+        
+        Holder<Biome> biome = player.level().getBiome(player.blockPosition());
+        ResourceLocation id = biome.unwrapKey().orElseThrow().location();
+        
+        return ids.contains(id.toString())
+                || biome.tags().anyMatch(tag -> tags.contains(tag.location().toString()));
+    }
+    
     //set IgnisBossDefeatedOnce flag by killing drag instead
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
@@ -278,7 +338,7 @@ public class OtherHandler {
         }
     }
     
-    //heal mobs by a certain amount whenever they kill another mob, full heal everything in the vicinity after 3 player deaths
+    //heal mobs by a certain amount whenever they kill another mob, full heal everything in the vicinity after 3 player deaths on a boss
     @SubscribeEvent
     public static void onLivingDeath2(LivingDeathEvent event) {
         if ((event.getEntity() instanceof ServerPlayer player)) {
