@@ -52,4 +52,16 @@ public class ArcaneSounds {
                     () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "block_of_silly_mine")));
     
     public static final Supplier<SoundType> BLOCK_OF_SILLY = () -> new SoundType(1.0f, 1.3f, BLOCK_OF_SILLY_MINE.get(), SoundEvents.STONE_STEP, SoundEvents.STONE_PLACE, SoundEvents.STONE_HIT, SoundEvents.STONE_FALL);
+    
+    public static final RegistryObject<SoundEvent> WITHER_BOSS_PHASE_1 =
+            SOUNDS.register("wither_boss_phase_1",
+                    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "wither_boss_phase_1")));
+    
+    public static final RegistryObject<SoundEvent> WITHER_BOSS_PHASE_2 =
+            SOUNDS.register("wither_boss_phase_2",
+                    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "wither_boss_phase_2")));
+    
+    public static final RegistryObject<SoundEvent> WITHER_BOSS_PHASE_3 =
+            SOUNDS.register("wither_boss_phase_3",
+                    () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ArcaneTweaks.MODID, "wither_boss_phase_3")));
 }

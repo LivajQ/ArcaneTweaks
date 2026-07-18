@@ -27,12 +27,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -273,6 +275,35 @@ public class OtherHandler {
                 boolean prev = worldData.isIgnisDefeatedOnce();
                 if (!prev) worldData.setIgnisDefeatedOnce(true);
             }
+        }
+    }
+    
+    //heal mobs by a certain amount whenever they kill another mob, full heal everything in the vicinity after 3 player deaths
+    @SubscribeEvent
+    public static void onLivingDeath2(LivingDeathEvent event) {
+        if ((event.getEntity() instanceof ServerPlayer player)) {
+            int deaths = player.getStats().getValue(Stats.CUSTOM, Stats.DEATHS);
+            if (deaths > 0 && deaths % 3 == 0) massHeal(player);
+            return;
+        }
+        if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+        if (attacker instanceof Player) return;
+        attacker.heal((float) (attacker.getMaxHealth() * Config.mobKillHealAmount));
+    }
+    
+    private static void massHeal(Player player) {
+        double radius = 128;
+        AABB area = player.getBoundingBox().inflate(radius);
+        
+        List<LivingEntity> nearby = player.level().getEntitiesOfClass(
+                LivingEntity.class,
+                area,
+                entity -> !(entity instanceof Player)
+                        && !(entity instanceof OwnableEntity ownable && ownable.getOwner() != null)
+        );
+        
+        for (LivingEntity entity : nearby) {
+            entity.heal(entity.getMaxHealth());
         }
     }
     

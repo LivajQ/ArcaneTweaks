@@ -140,13 +140,13 @@ public class ParryImp implements ParryData {
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     ArcaneSounds.MELEE_PARRY.get(), SoundSource.PLAYERS, 1f, 1f);
             
-            MobEffect vertigo = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("eeeabsmobs", "vertigo_effect"));
+            MobEffect stun = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("eeeabsmobs", "stun_effect"));
             MobEffect vulnerable = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("apothecary", "vulnerable"));
             MobEffect disruption = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("spartanweaponry", "ender_distruption"));
             MobEffect inexhaustible = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation("parcool", "inexhaustible"));
             MobEffect strength = MobEffects.DAMAGE_BOOST;
            
-            if (vertigo != null) target.addEffect(new MobEffectInstance(vertigo, 40, 0));
+            if (stun != null) target.addEffect(new MobEffectInstance(stun, 40, 0));
             if (vulnerable != null) target.addEffect(new MobEffectInstance(vulnerable, 40, 1));
             if (disruption != null) target.addEffect(new MobEffectInstance(disruption, 600, 0));
             if (inexhaustible != null) player.addEffect(new MobEffectInstance(inexhaustible, 60, 0));

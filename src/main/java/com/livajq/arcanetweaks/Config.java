@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_POSITIVE_EFFECTS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_NEGATIVE_EFFECTS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_ITEMS;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> SHIELD_BASH_PROPERTIES;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -86,6 +88,7 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue SEA_SERPENT_REACH;
     private static final ForgeConfigSpec.DoubleValue SOUL_FRACTURE_STRENGTH;
     private static final ForgeConfigSpec.DoubleValue BLOCK_SILLY_CHANCE;
+    private static final ForgeConfigSpec.DoubleValue MOB_KILL_HEAL_AMOUNT;
     
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
@@ -198,6 +201,7 @@ public final class Config {
         BUILDER.pop();
         
         SEA_SERPENT_REACH = BUILDER.comment("Attack reach bonus for sea serpents. 0.5 = 50% extra reach etc.").defineInRange("seaSerpentReach", 1.0D, -1000.0D, 1000.0D);
+        MOB_KILL_HEAL_AMOUNT = BUILDER.comment("Amount of healing mobs will receive after killing another mob. 1.0 = 100%").defineInRange("mobKillHealAmount", 0.08D, 0.0D, 1.0D);
         
         BUILDER.pop();
         BUILDER.push("Rituals");
@@ -391,6 +395,20 @@ public final class Config {
         PARRY_COOLDOWN_FAIL = BUILDER.comment("Cooldown (in ticks) after an unsuccessful parry before another one can be performed. Used to prevent spamming").defineInRange("parryCooldownFail", 30, 0, 1000000);
         PARRY_COOLDOWN_SUCCESS = BUILDER.comment("Cooldown (in ticks) after a successful parry before another one can be performed").defineInRange("parryCooldownSuccess", 200, 0, 1000000);
         
+        SHIELD_BASH_PROPERTIES = BUILDER
+                .comment("Extra damage and effects for shields when using the bash ability",
+                        "Format: id;damageBonus;effect;amplifier;duration",
+                        "Example: spartanshields:diamond_basic_shield;10;minecraft:poison;1;300",
+                        "NONE for no effect. Not specifying the amplifier/duration will default to level 1/200 ticks")
+                .defineListAllowEmpty(
+                        List.of("shieldBashProperties"),
+                        List.of(
+                                "spartanshields:diamond_basic_shield;10;minecraft:poison;1;300",
+                                "spartanshields:gold_basic_shield;5;NONE"
+                        ),
+                        o -> o instanceof String
+                );
+        
         BUILDER.pop();
         
         BUILDER.push("Resistances");
@@ -524,6 +542,7 @@ public final class Config {
     public static Map<EntityType<?>, MobStats> mobAttributeModifiers = new HashMap<>();
     public static Map<ResourceLocation, Integer> enchantmentTiers = new HashMap<>();
     public static Map<BlockItemOfSilly.SillyEffect, Integer> blockSillyEffectWeight;
+    public static Map<ResourceLocation, ShieldBashProperty> shieldBashProperties;
  
     public static List<String> deathMessages;
     public static List<String> lostCitiesDoors;
@@ -557,6 +576,7 @@ public final class Config {
     public static double seaSerpentReach;
     public static double soulFractureStrength;
     public static double blockSillyChance;
+    public static double mobKillHealAmount;
     
     public static int worldgenType;
     public static int hardcoreLivesCount;
@@ -657,6 +677,8 @@ public final class Config {
         blockSillyStealItemsRolls = BLOCK_SILLY_STEAL_ITEMS_ROLLS.get();
         blockSillyVisualsRadius =  BLOCK_SILLY_VISUALS_RADIUS.get();
         blockSillyEffectRolls = BLOCK_SILLY_EFFECT_ROLLS.get();
+        shieldBashProperties = parseShieldBashProperties();
+        mobKillHealAmount = MOB_KILL_HEAL_AMOUNT.get();
     }
     
     // =========================================================
@@ -842,9 +864,44 @@ public final class Config {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
     
+    public static Map<ResourceLocation, ShieldBashProperty> parseShieldBashProperties() {
+        Map<ResourceLocation, ShieldBashProperty> map = new HashMap<>();
+        
+        for (String entry : SHIELD_BASH_PROPERTIES.get()) {
+            String[] parts = entry.split(";");
+            if (parts.length < 2) {
+                ArcaneTweaks.LOGGER.warn("Invalid shield bash entry: " + entry);
+                continue;
+            }
+            
+            ResourceLocation shieldId = new ResourceLocation(parts[0].trim());
+            float damageBonus = Float.parseFloat(parts[1].trim());
+            
+            ResourceLocation effectId = null;
+            int amplifier = 0;
+            int duration = 200;
+            
+            if (parts.length >= 3) {
+                String effectStr = parts[2].trim();
+                if (!effectStr.equalsIgnoreCase("NONE")) effectId = new ResourceLocation(effectStr);
+            }
+            
+            if (parts.length >= 4) amplifier = Integer.parseInt(parts[3].trim()) - 1;
+            if (parts.length >= 5) duration = Integer.parseInt(parts[4].trim());
+            
+            ShieldBashProperty property = new ShieldBashProperty(shieldId, damageBonus, effectId, amplifier, duration);
+            
+            map.put(shieldId, property);
+        }
+        
+        return map;
+    }
+    
+    
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}
-   
+    public record ShieldBashProperty(ResourceLocation shieldId, float damageBonus, @Nullable ResourceLocation effectId, int amplifier, int duration) {}
+    
     public record SillyEffects(ResourceLocation effect, int amplifier, int duration) {
         public static SillyEffects parse(String s) {
             String[] parts = s.split(";");

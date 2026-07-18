@@ -96,13 +96,12 @@ dependencies {
     implementation fg.deobf("curse.maven:enhanced-ai-${enhanced_ai_version}")
     implementation fg.deobf("curse.maven:insanelib-${insanelib_version}")
     implementation fg.deobf("curse.maven:spartan-weaponry-${spartan_weaponry_version}")
+    implementation fg.deobf("curse.maven:spartan-shields-252239:5440763")
     implementation fg.deobf("curse.maven:bountifulbaubles-reforked-${bountifulbaubles_reforked_version}")
     implementation fg.deobf("curse.maven:eternal-starlight-forge-${eternal_starlight_forge_version}")
     implementation fg.deobf("curse.maven:irons-lib-${irons_lib_version}")
     implementation fg.deobf("curse.maven:spelunkery-${spelunkery_version}")
     implementation fg.deobf("curse.maven:selene-${moonlight_version}")
-    implementation fg.deobf("curse.maven:celestial-overhaul-${celestial_overhaul_version}")
-    implementation fg.deobf("curse.maven:hunger-strike-${hunger_strike_version}")
     implementation fg.deobf("curse.maven:darker-depths-460681:8189242")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {

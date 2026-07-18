@@ -1,11 +1,15 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
 import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.*;
 
@@ -33,6 +37,24 @@ public abstract class BossBehavior<T extends LivingEntity> {
             thresholds[i - 1] = 1.0 - (i / (double) phaseCount);
         }
         return thresholds;
+    }
+    
+    public int getPhase(T boss) {
+        double hpRatio = boss.getHealth() / boss.getMaxHealth();
+        int phase = 1;
+        for (int i = 0; i < thresholds.length; i++) {
+            if (hpRatio <= thresholds[i]) phase = i + 2;
+        }
+        return phase;
+    }
+    
+    public int getPhaseFromTag(T boss) {
+        CompoundTag tag = boss.getPersistentData();
+        return tag.contains("Arcane_BossPhase") ? tag.getInt("Arcane_BossPhase") : 1;
+    }
+    
+    public SoundEvent getPhaseMusic(T boss) {
+        return null;
     }
     
     public void reconcileMinions(T boss) {

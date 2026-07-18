@@ -29,5 +29,6 @@ public class BossBehaviorRegistry {
         register(IafEntityRegistry.FIRE_DRAGON.get(), new DragonFireBehavior());
         register(IafEntityRegistry.ICE_DRAGON.get(), new DragonIceBehavior());
         register(IafEntityRegistry.LIGHTNING_DRAGON.get(), new DragonLightningBehavior());
+        register(EntityType.WITHER, new WitherBehavior());
     }
 }

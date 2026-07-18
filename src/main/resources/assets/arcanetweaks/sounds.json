@@ -43,5 +43,14 @@
     "sounds": [
       { "name": "arcanetweaks:block_of_silly_mine" }
     ]
+  },
+  "wither_boss_phase_1": {
+    "sounds": ["arcanetweaks:wither_boss_phase_1"]
+  },
+  "wither_boss_phase_2": {
+    "sounds": ["arcanetweaks:wither_boss_phase_2"]
+  },
+  "wither_boss_phase_3": {
+    "sounds": ["arcanetweaks:wither_boss_phase_3"]
   }
 }

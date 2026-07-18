@@ -34,7 +34,7 @@ public class DistrictBiomeSource extends BiomeSource {
     private final Map<Long, Holder<Biome>> remapCache;
     private final Map<ResourceKey<Biome>, Holder<Biome>> biomeHolders;
     
-    private static final int SURFACE_QUART_Y = 80;
+    private static final int SURFACE_QUART_Y = 75;
     
     public DistrictBiomeSource(BiomeSource delegate, long seed) {
         this.delegate = delegate;

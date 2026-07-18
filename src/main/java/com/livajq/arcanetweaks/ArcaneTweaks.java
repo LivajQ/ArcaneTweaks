@@ -53,6 +53,7 @@ public class ArcaneTweaks {
         ArcaneSounds.SOUNDS.register(modEventBus);
         ArcaneBlocks.BLOCKS.register(modEventBus);
         ArcaneItems.ITEMS.register(modEventBus);
+        ArcaneAttributes.ATTRIBUTES.register(modEventBus);
         modEventBus.addListener(this::onRegister);
         
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC, MODID + "/arcanetweaks.toml");

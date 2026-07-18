@@ -55,6 +55,7 @@
     "eeeabsmobs.PortalStructureHelperMixin",
     "bclib.UnderwaterPlantBlockMixin",
     "spartanweaponry.MobMixinSquared",
+    "spartanshields.ShieldBashPacketHandlerMixin",
     "bountifulbaubles.BrokenHeartItemMixin",
     "bountifulbaubles.BrokenHeartItemAccessor",
     "bountifulbaubles.PhylacteryCharmItemMixin",

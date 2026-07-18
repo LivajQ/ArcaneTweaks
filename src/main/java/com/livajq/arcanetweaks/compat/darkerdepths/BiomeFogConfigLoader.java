@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.core.object.Color;
@@ -28,6 +29,7 @@ public class BiomeFogConfigLoader {
     private static final String FILE_NAME = "biome_fog.toml";
     
     public static void init() {
+        if (!ModList.get().isLoaded("darkerdepths")) return;
         File modConfigDir = FMLPaths.CONFIGDIR.get().resolve(ArcaneTweaks.MODID).toFile();
         File file = new File(modConfigDir, FILE_NAME);
         
