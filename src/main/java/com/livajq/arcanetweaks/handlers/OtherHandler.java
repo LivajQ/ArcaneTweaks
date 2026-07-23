@@ -1,8 +1,6 @@
 package com.livajq.arcanetweaks.handlers;
 
-import cn.leolezury.eternalstarlight.common.EternalStarlight;
 import com.gametechbc.traveloptics.entity.mobs.nightwarden_boss.NightwardenBossEntity;
-import com.github.L_Ender.cataclysm.world.data.CMWorldData;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
 import com.livajq.arcanetweaks.init.ArcaneSounds;
@@ -10,35 +8,26 @@ import com.livajq.arcanetweaks.mixin.vanilla.ChunkGeneratorAccessor;
 import com.livajq.arcanetweaks.world.district.DistrictBiomeSource;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ordana.spelunkery.reg.ModFluids;
-import insane96mcp.enhancedai.modules.mobs.Leaders;
-import io.redspace.ironsspellbooks.api.entity.IOminousEntity;
-import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -51,10 +40,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -73,7 +60,6 @@ import java.util.stream.Collectors;
 public class OtherHandler {
     
     //private static final ResourceKey<Level> ABYSS = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostworlds", "abyss"));
-    private static final ResourceKey<Level> STARLIGHT = ResourceKey.create(Registries.DIMENSION, EternalStarlight.id("starlight"));
     private static final UUID HER_ID = UUID.fromString("7905095f-4e96-43d1-83a0-870265821205");
     private static final UUID WOMPWOMP_ID = UUID.fromString("9b65f606-23d8-428e-a769-5817ca979faf");
     private static final String WOMPWOMP_NAME = "Therealcaprisun";
@@ -134,21 +120,6 @@ public class OtherHandler {
         BiomeSource wrapped = new DistrictBiomeSource(vanilla, level.getSeed());
 
         ((ChunkGeneratorAccessor) generator).setBiomeSource(wrapped);
-    }
-    
-    //spawn ominous Irons bosses based on dimension
-    @SubscribeEvent
-    public static void handleOminousEntities(EntityJoinLevelEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel serverLevel) || event.loadedFromDisk()) return;
-        
-        var entity = event.getEntity();
-        if (entity instanceof IOminousEntity ominousSettings && !ominousSettings.isOminous() && ominousSettings.canTriggerOminous()) {
-             if (serverLevel.dimension() == STARLIGHT) {
-                 Vec3 center = entity.position();
-                 ominousSettings.onOminousTrigger();
-                 serverLevel.playSound(null, BlockPos.containing(center), SoundRegistry.TRIAL_SPAWNER_OMINOUS_ACTIVATE.get(), SoundSource.BLOCKS, 4, 1.0F);
-             }
-        }
     }
 
     //constantly spawn particles on the player model
@@ -287,14 +258,14 @@ public class OtherHandler {
                     lightning.setPos(player.position());
                     player.level().addFreshEntity(lightning);
                     player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".dismount_strike_" + (player.getRandom().nextInt(5) + 1))
-                            .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
-                    player.dismountTo(player.getX(), player.getY(), player.getZ());
+                            .withStyle(style -> style.withColor(ChatFormatting.GOLD)), true);
+                    player.stopRiding();
                 }
             }
             else {
                 ENTERED_DISMOUNT_BIOME_TICK.put(player, player.tickCount);
                 player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".dismount_warn_" + (player.getRandom().nextInt(5) + 1))
-                        .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
+                        .withStyle(style -> style.withColor(ChatFormatting.GOLD)), true);
             }
         }
     }
@@ -308,7 +279,7 @@ public class OtherHandler {
         if (isDismountBiome(player)) {
             event.setCanceled(true);
             if (!event.getLevel().isClientSide) player.displayClientMessage(Component.translatable(ArcaneTweaks.MODID + ".cannot_mount_here")
-                    .withStyle(style -> style.withColor(ChatFormatting.DARK_BLUE).withBold(true)), true);
+                    .withStyle(style -> style.withColor(ChatFormatting.GOLD)), true);
         }
         else ENTERED_DISMOUNT_BIOME_TICK.remove(player);
     }
@@ -322,111 +293,6 @@ public class OtherHandler {
         
         return ids.contains(id.toString())
                 || biome.tags().anyMatch(tag -> tags.contains(tag.location().toString()));
-    }
-    
-    //set IgnisBossDefeatedOnce flag by killing drag instead
-    @SubscribeEvent
-    public static void onLivingDeath(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntity();
-        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-        if (id != null && id.toString().equals("block_factorys_bosses:infernal_dragon")) {
-            CMWorldData worldData = CMWorldData.get(entity.level(), Level.NETHER);
-            if (worldData != null) {
-                boolean prev = worldData.isIgnisDefeatedOnce();
-                if (!prev) worldData.setIgnisDefeatedOnce(true);
-            }
-        }
-    }
-    
-    //heal mobs by a certain amount whenever they kill another mob, full heal everything in the vicinity after 3 player deaths on a boss
-    @SubscribeEvent
-    public static void onLivingDeath2(LivingDeathEvent event) {
-        if ((event.getEntity() instanceof ServerPlayer player)) {
-            int deaths = player.getStats().getValue(Stats.CUSTOM, Stats.DEATHS);
-            if (deaths > 0 && deaths % 3 == 0) massHeal(player);
-            return;
-        }
-        if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
-        if (attacker instanceof Player) return;
-        attacker.heal((float) (attacker.getMaxHealth() * Config.mobKillHealAmount));
-    }
-    
-    private static void massHeal(Player player) {
-        double radius = 128;
-        AABB area = player.getBoundingBox().inflate(radius);
-        
-        List<LivingEntity> nearby = player.level().getEntitiesOfClass(
-                LivingEntity.class,
-                area,
-                entity -> !(entity instanceof Player)
-                        && !(entity instanceof OwnableEntity ownable && ownable.getOwner() != null)
-        );
-        
-        for (LivingEntity entity : nearby) {
-            entity.heal(entity.getMaxHealth());
-        }
-    }
-    
-    //add more drops to leader mobs. Eclipse wanted it hardcoded idk
-    @SubscribeEvent
-    public static void onLivingDrops(LivingDropsEvent event) {
-        LivingEntity entity = event.getEntity();
-        if (!ModList.get().isLoaded("enhancedai")) return;
-        if (!Leaders.isLeader(entity)) return;
-        
-        Level level = entity.level();
-        double x = entity.getX();
-        double y = entity.getY();
-        double z = entity.getZ();
-        
-        Map<Item, Integer> itemCounts = new HashMap<>();
-        
-        Item arcaneEssence = ForgeRegistries.ITEMS.getValue(new ResourceLocation("irons_spellbooks", "arcane_essence"));
-        Item glowingPowder = ForgeRegistries.ITEMS.getValue(new ResourceLocation("trinketsandbaubles", "glowing_powder"));
-        Item ectoplasm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("goety", "ectoplasm"));
-        if (arcaneEssence != null) itemCounts.put(arcaneEssence, entity.getRandom().nextInt(4) + 1);
-        if (glowingPowder != null) itemCounts.put(glowingPowder, 1);
-        if (ectoplasm != null) itemCounts.put(ectoplasm, entity.getRandom().nextInt(2) + 1);
-        
-        itemCounts.forEach((item, count) -> {
-            ItemStack stack = new ItemStack(item, count);
-            event.getDrops().add(new ItemEntity(level, x, y, z, stack));
-        });
-    }
-
-    //Randomly replace a mob with a different one on the very first spawn
-    @SubscribeEvent
-    public static void onEntityJoin(EntityJoinLevelEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity entity)) return;
-        if (event.getLevel().isClientSide()) return;
-
-        CompoundTag tag = entity.getPersistentData();
-        if (tag.getBoolean("ArcaneTweaks_SpawnFlag")) return;
-        tag.putBoolean("ArcaneTweaks_SpawnFlag", true);
-
-        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-        if (id == null) return;
-
-        for (Config.MobReplacement rule : Config.mobReplacements) {
-            if (!rule.oldId().equals(id)) continue;
-
-            if (entity.getRandom().nextDouble() > rule.chance()) continue;
-
-            EntityType<?> newType = ForgeRegistries.ENTITY_TYPES.getValue(rule.newId());
-            if (newType == null) {
-                ArcaneTweaks.LOGGER.warn("Unknown replacement entity type: {}", rule.newId());
-                continue;
-            }
-
-            Entity replacement = newType.create(entity.level());
-            if (replacement == null) continue;
-
-            replacement.setPos(entity.position());
-            entity.level().addFreshEntity(replacement);
-
-            event.setCanceled(true);
-            return;
-        }
     }
     
     //apply effects when player is in portal liquid from Spelunkery

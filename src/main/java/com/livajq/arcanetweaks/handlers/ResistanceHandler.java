@@ -2,7 +2,10 @@ package com.livajq.arcanetweaks.handlers;
 
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
+import io.redspace.ironsspellbooks.api.events.SpellDamageEvent;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
+import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
+import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,6 +22,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.saksolm.monsterexpansion.entity.util.DamageTypes;
+import net.saksolm.monsterexpansion.util.ICombatData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,4 +106,15 @@ public class ResistanceHandler {
     }
     
     private record MagicResData(MobEffect effect, Attribute attribute, UUID uuid, double multiplier) {}
+    
+    @SubscribeEvent
+    public static void onSpellDamage(SpellDamageEvent event) {
+        ICombatData combatData = (ICombatData) event.getSpellDamageSource();
+        AbstractSpell spell = event.getSpellDamageSource().spell();
+        
+        if (spell.getSchoolType() == SchoolRegistry.FIRE.get()) combatData.setElementType(DamageTypes.ElementType.FIRE);
+        else if (spell.getSchoolType() == SchoolRegistry.ICE.get()) combatData.setElementType(DamageTypes.ElementType.ICE);
+        else return;
+        combatData.setElementalDamage(event.getAmount());
+    }
 }

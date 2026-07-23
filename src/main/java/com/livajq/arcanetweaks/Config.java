@@ -55,6 +55,7 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_SILLY_ITEMS;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> SHIELD_BASH_PROPERTIES;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISMOUNT_BIOMES;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> TEMPERED_MONSTER_BIOMES;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -90,6 +91,9 @@ public final class Config {
     private static final ForgeConfigSpec.DoubleValue SOUL_FRACTURE_STRENGTH;
     private static final ForgeConfigSpec.DoubleValue BLOCK_SILLY_CHANCE;
     private static final ForgeConfigSpec.DoubleValue MOB_KILL_HEAL_AMOUNT;
+    private static final ForgeConfigSpec.DoubleValue BOSS_MULTIPLAYER_HEALTH_SCALING;
+    private static final ForgeConfigSpec.DoubleValue BOSS_MULTIPLAYER_ARMOR_SCALING;
+    private static final ForgeConfigSpec.DoubleValue BOSS_MULTIPLAYER_TOUGHNESS_SCALING;
     
     private static final ForgeConfigSpec.IntValue WORLDGEN_TYPE;
     private static final ForgeConfigSpec.IntValue HARDCORE_LIVES_COUNT;
@@ -114,6 +118,7 @@ public final class Config {
     private static final ForgeConfigSpec.IntValue BLOCK_SILLY_STEAL_ITEMS_ROLLS;
     private static final ForgeConfigSpec.IntValue BLOCK_SILLY_VISUALS_RADIUS;
     private static final ForgeConfigSpec.IntValue BLOCK_SILLY_EFFECT_ROLLS;
+    private static final ForgeConfigSpec.IntValue DEATHS_FOR_BOSS_FULL_HEAL;
    
     static {
         BUILDER.push("Mobs");
@@ -201,6 +206,23 @@ public final class Config {
 
         BUILDER.pop();
         
+        BUILDER.push("Tempered monsters");
+        
+        TEMPERED_MONSTER_BIOMES = BUILDER
+                .comment("Biomes in which the tempered versions of some monsters are guaranteed to spawn",
+                        "Example: monsterexpansion:ignathos - #arcane:volcanic_district, #arcane:has_cities"
+                )
+                .defineListAllowEmpty(
+                        List.of("temperedMonsterBiomes"),
+                        List.of(
+                                "monsterexpansion:ignathos - #arcane:volcanic_district, #arcane:has_cities",
+                                "monsterexpansion:leivekilth - minecraft:plains, #forge:is_peak"
+                        ),
+                        o -> o instanceof String
+                );
+        
+        BUILDER.pop();
+        
         SEA_SERPENT_REACH = BUILDER.comment("Attack reach bonus for sea serpents. 0.5 = 50% extra reach etc.").defineInRange("seaSerpentReach", 1.0D, -1000.0D, 1000.0D);
         MOB_KILL_HEAL_AMOUNT = BUILDER.comment("Amount of healing mobs will receive after killing another mob. 1.0 = 100%").defineInRange("mobKillHealAmount", 0.08D, 0.0D, 1.0D);
         
@@ -252,6 +274,11 @@ public final class Config {
         OBLITERATOR_GROUND_NUKE_DAMAGE_FLAT = BUILDER.comment("Flat damage bonus for the ground nuke attack. Also affects the Tesseract").defineInRange("obliteratorGroundNukeDamageFlat", 100.0D, -1000000.0D, 1000000.0D);
         OBLITERATOR_GROUND_NUKE_DAMAGE_PERCENT = BUILDER.comment("Bonus damage based on target's maximum health for the ground nuke attack. 0.5 = 50% of target's max health dealt as extra damage. Also affects the Tesseract").defineInRange("obliteratorGroundNukeDamagePercent", 0.1D, -1000.0D, 1000.0D);
         BUILDER.pop();
+        
+        BOSS_MULTIPLAYER_HEALTH_SCALING = BUILDER.comment("Percent health bonus for certain bosses per player. 0.5 = 50% health bonus").defineInRange("bossMultiplayerHealthScaling", 0.5D, 0.0D, 1000.0D);
+        BOSS_MULTIPLAYER_ARMOR_SCALING = BUILDER.comment("Flat armor bonus for certain bosses per player. 2.0 = +2 armor bonus").defineInRange("bossMultiplayerArmorScaling", 8.0D, 0.0D, 1000.0D);
+        BOSS_MULTIPLAYER_TOUGHNESS_SCALING = BUILDER.comment("Flat armor toughness bonus for certain bosses per player. 2.0 = +2 armor toughness bonus").defineInRange("bossMultiplayerToughnessScaling", 4.0D, 0.0D, 1000.0D);
+        DEATHS_FOR_BOSS_FULL_HEAL = BUILDER.comment("The amount of player deaths after which the boss is fully healed. 0 for off").defineInRange("deathsForBossFullHeal", 3, 0, 1000);
         
         BUILDER.pop();
         
@@ -556,6 +583,7 @@ public final class Config {
     public static Map<ResourceLocation, Integer> enchantmentTiers = new HashMap<>();
     public static Map<BlockItemOfSilly.SillyEffect, Integer> blockSillyEffectWeight;
     public static Map<ResourceLocation, ShieldBashProperty> shieldBashProperties;
+    public static Map<ResourceLocation, TemperedMonsterBiomes> temperedMonsterBiomes;
  
     public static List<String> deathMessages;
     public static List<String> lostCitiesDoors;
@@ -590,6 +618,9 @@ public final class Config {
     public static double soulFractureStrength;
     public static double blockSillyChance;
     public static double mobKillHealAmount;
+    public static double bossMultiplayerHealthScaling;
+    public static double bossMultiplayerArmorScaling;
+    public static double bossMultiplayerToughnessScaling;
     
     public static int worldgenType;
     public static int hardcoreLivesCount;
@@ -614,6 +645,7 @@ public final class Config {
     public static int blockSillyStealItemsRolls;
     public static int blockSillyVisualsRadius;
     public static int blockSillyEffectRolls;
+    public static int deathsForBossFullHeal;
     
     // =========================================================
     // Sync
@@ -693,6 +725,11 @@ public final class Config {
         shieldBashProperties = parseShieldBashProperties();
         mobKillHealAmount = MOB_KILL_HEAL_AMOUNT.get();
         dismountBiomesSet = new HashSet<>(DISMOUNT_BIOMES.get());
+        bossMultiplayerHealthScaling = BOSS_MULTIPLAYER_HEALTH_SCALING.get();
+        bossMultiplayerArmorScaling =  BOSS_MULTIPLAYER_ARMOR_SCALING.get();
+        bossMultiplayerToughnessScaling = BOSS_MULTIPLAYER_TOUGHNESS_SCALING.get();
+        deathsForBossFullHeal = DEATHS_FOR_BOSS_FULL_HEAL.get();
+        temperedMonsterBiomes = parseTemperedMonsterBiomes();
     }
     
     // =========================================================
@@ -911,9 +948,44 @@ public final class Config {
         return map;
     }
     
+    public static Map<ResourceLocation, TemperedMonsterBiomes> parseTemperedMonsterBiomes() {
+        Map<ResourceLocation, TemperedMonsterBiomes> result = new HashMap<>();
+        
+        for (String line : TEMPERED_MONSTER_BIOMES.get()) {
+            if (line == null || line.isBlank()) continue;
+            
+            String[] split = line.split("-", 2);
+            if (split.length != 2) continue;
+            
+            ResourceLocation mobId = new ResourceLocation(split[0].trim());
+            
+            String biomePart = split[1].trim();
+            String[] biomeTokens = biomePart.split(",");
+            
+            Set<ResourceLocation> biomeIds = new HashSet<>();
+            Set<String> biomeTags = new HashSet<>();
+            
+            for (String token : biomeTokens) {
+                token = token.trim();
+                if (token.isEmpty()) continue;
+                
+                if (token.startsWith("#")) {
+                    biomeTags.add(token.substring(1));
+                } else {
+                    biomeIds.add(new ResourceLocation(token));
+                }
+            }
+            
+            result.put(mobId, new TemperedMonsterBiomes(biomeIds, biomeTags));
+        }
+        
+        return result;
+    }
+    
     public record Range(float min, float max) {}
     public record MobReplacement(ResourceLocation oldId, ResourceLocation newId, double chance) {}
     public record ShieldBashProperty(ResourceLocation shieldId, float damageBonus, @Nullable ResourceLocation effectId, int amplifier, int duration) {}
+    public record TemperedMonsterBiomes(Set<ResourceLocation> biomeIds, Set<String> biomeTags) {}
     
     public record SillyEffects(ResourceLocation effect, int amplifier, int duration) {
         public static SillyEffects parse(String s) {

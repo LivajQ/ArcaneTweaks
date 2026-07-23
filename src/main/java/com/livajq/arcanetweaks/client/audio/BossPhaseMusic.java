@@ -65,6 +65,7 @@ public class BossPhaseMusic extends AbstractTickableSoundInstance {
         
         if (this.ticksExisted % 100 == 0) {
             Minecraft.getInstance().getMusicManager().stopPlaying();
+            Minecraft.getInstance().getSoundManager().stop(null, SoundSource.MUSIC);
         }
         ++this.ticksExisted;
     }

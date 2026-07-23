@@ -22,11 +22,11 @@ public class WitherBehavior extends BossBehavior<WitherBoss> {
     @Override
     public void onPhaseChange(WitherBoss boss, int newPhase, int oldPhase, boolean firstTime) {
         //probably some sounds effects/events for phase changes
+        //or ig not since there's a mod for this now
     }
     
     @Override
     public SoundEvent getPhaseMusic(WitherBoss boss) {
-        System.out.println("Client: " + boss.level().isClientSide + " Phase: " + getPhase(boss));
         return PHASE_MUSIC[getPhase(boss) - 1];
     }
 }

@@ -8,6 +8,8 @@ import com.livajq.arcanetweaks.compat.darkerdepths.BiomeFogConfigLoader;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.AdeptNetherCustomRitualType;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.EndCustomRitualType;
 import com.livajq.arcanetweaks.compat.goety.ritualtype.ExpertNetherCustomRitualType;
+import com.livajq.arcanetweaks.data.MobEquipmentList;
+import com.livajq.arcanetweaks.data.MobEquipmentReloadListener;
 import com.livajq.arcanetweaks.handlers.PacketHandler;
 import com.livajq.arcanetweaks.handlers.ResistanceHandler;
 import com.livajq.arcanetweaks.handlers.ResourceReloadHandler;
@@ -57,6 +59,8 @@ public class ArcaneTweaks {
         modEventBus.addListener(this::onRegister);
         
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC, MODID + "/arcanetweaks.toml");
+        
+        MobEquipmentList.init();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -79,6 +83,7 @@ public class ArcaneTweaks {
     
     private void reloadListener(AddReloadListenerEvent event) {
         event.addListener(new ResourceReloadHandler());
+        event.addListener(new MobEquipmentReloadListener());
     }
     
     private void onRegister(RegisterEvent event) {

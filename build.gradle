@@ -96,13 +96,15 @@ dependencies {
     implementation fg.deobf("curse.maven:enhanced-ai-${enhanced_ai_version}")
     implementation fg.deobf("curse.maven:insanelib-${insanelib_version}")
     implementation fg.deobf("curse.maven:spartan-weaponry-${spartan_weaponry_version}")
-    implementation fg.deobf("curse.maven:spartan-shields-252239:5440763")
+    implementation fg.deobf("curse.maven:spartan-shields-${spartan_shields_version}")
     implementation fg.deobf("curse.maven:bountifulbaubles-reforked-${bountifulbaubles_reforked_version}")
     implementation fg.deobf("curse.maven:eternal-starlight-forge-${eternal_starlight_forge_version}")
     implementation fg.deobf("curse.maven:irons-lib-${irons_lib_version}")
     implementation fg.deobf("curse.maven:spelunkery-${spelunkery_version}")
     implementation fg.deobf("curse.maven:selene-${moonlight_version}")
-    implementation fg.deobf("curse.maven:darker-depths-460681:8189242")
+    implementation fg.deobf("curse.maven:darker-depths-${darker_depths_version}")
+    implementation fg.deobf("curse.maven:monster-expansion-1336105:8451678")
+    //implementation fg.deobf("curse.maven:tkvm-wither-1557479:8324007")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")
