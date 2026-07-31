@@ -103,8 +103,9 @@ dependencies {
     implementation fg.deobf("curse.maven:spelunkery-${spelunkery_version}")
     implementation fg.deobf("curse.maven:selene-${moonlight_version}")
     implementation fg.deobf("curse.maven:darker-depths-${darker_depths_version}")
-    implementation fg.deobf("curse.maven:monster-expansion-1336105:8451678")
-    //implementation fg.deobf("curse.maven:tkvm-wither-1557479:8324007")
+    implementation fg.deobf("curse.maven:monster-expansion-${monster_expansion_version}")
+    implementation fg.deobf("curse.maven:quark-${quark_version}")
+    implementation fg.deobf("curse.maven:zeta-${zeta_version}")
 
     implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
         jarJar.ranged(it, "[0.3.7-beta.1,)")

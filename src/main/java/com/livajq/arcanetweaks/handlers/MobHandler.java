@@ -201,6 +201,7 @@ public class MobHandler {
     //turn Monster Expansion mobs into tempered versions in specific biomes
     @SubscribeEvent
     public static void onEntityJoin3(EntityJoinLevelEvent event) {
+        if (!ModList.get().isLoaded("monsterexpansion")) return;
         if (!(event.getEntity() instanceof AbstractLargeMonster<?, ?> monster)) return;
         if (event.getLevel().isClientSide()) return;
         

@@ -46,10 +46,10 @@ public class MobEquipmentBuilder {
             return;
         }
         try {
-            System.out.println("MobEquipmentBuilder.createFile called for " + fileName);
             JsonObject json = buildJson();
 
-            Path dir = Paths.get("src", "main", "resources", "data", ArcaneTweaks.MODID, "mob_equipment");
+            //output in run/data
+            Path dir = Paths.get("data", ArcaneTweaks.MODID, "mob_equipment");
             Files.createDirectories(dir);
 
             Path file = dir.resolve(fileName + ".json");
@@ -142,24 +142,16 @@ public class MobEquipmentBuilder {
     }
     
     public static class EquipmentSetBuilder {
-        
-        private final MobEquipmentBuilder parentTop;
+ 
         private final BiomeGroupBuilder parentBiome;
         
         private int weight = 1;
         
         //slotName -> list of WeightedItemBuilder
         private final Map<String, List<WeightedItemBuilder>> slots = new HashMap<>();
-        
-        //global set
-        public EquipmentSetBuilder(MobEquipmentBuilder parentTop) {
-            this.parentTop = parentTop;
-            this.parentBiome = null;
-        }
-        
-        //biome set
+ 
+        //biome group set
         public EquipmentSetBuilder(BiomeGroupBuilder parentBiome) {
-            this.parentTop = null;
             this.parentBiome = parentBiome;
         }
         
@@ -171,13 +163,12 @@ public class MobEquipmentBuilder {
         //equipment slot entries
         public SlotBuilder slot(String slotName) {
             List<WeightedItemBuilder> list = slots.computeIfAbsent(slotName, k -> new ArrayList<>());
-            return new SlotBuilder(this, slotName, list);
+            return new SlotBuilder(this, list);
         }
         
         public BiomeGroupBuilder endSet() {
             return parentBiome;
         }
-        
         
         public JsonObject toJson() {
             JsonObject obj = new JsonObject();
@@ -203,12 +194,10 @@ public class MobEquipmentBuilder {
     public static class SlotBuilder {
         
         private final EquipmentSetBuilder parentSet;
-        private final String slotName;
         private final List<WeightedItemBuilder> items;
         
-        public SlotBuilder(EquipmentSetBuilder parentSet, String slotName, List<WeightedItemBuilder> items) {
+        public SlotBuilder(EquipmentSetBuilder parentSet, List<WeightedItemBuilder> items) {
             this.parentSet = parentSet;
-            this.slotName = slotName;
             this.items = items;
         }
         
@@ -220,14 +209,6 @@ public class MobEquipmentBuilder {
      
         public EquipmentSetBuilder endSlot() {
             return parentSet;
-        }
- 
-        public JsonArray toJson() {
-            JsonArray arr = new JsonArray();
-            for (WeightedItemBuilder w : items) {
-                arr.add(w.toJson());
-            }
-            return arr;
         }
     }
     
@@ -255,9 +236,8 @@ public class MobEquipmentBuilder {
             return enchantBuilder;
         }
         
-        public EnchantBuilder predefinedEnchant(String id, int level) {
+        public EnchantBuilder predefinedEnchant() {
             this.enchantBuilder = new EnchantBuilder(this, false);
-            this.enchantBuilder.addPredefined(id, level);
             return enchantBuilder;
         }
         

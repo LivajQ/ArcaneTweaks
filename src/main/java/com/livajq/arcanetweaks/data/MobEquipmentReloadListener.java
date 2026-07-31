@@ -96,9 +96,9 @@ public class MobEquipmentReloadListener extends SimpleJsonResourceReloadListener
                     else globalSets.add(parseSet(json, entry.getKey()));
                 }
                 
-                if (parsed.containsKey(mobId)) {
-                    ArcaneTweaks.LOGGER.warn("Duplicate mob_equipment entry for {} — file {} overwrites a previous one", mobId, entry.getKey());
-                }
+                //if (parsed.containsKey(mobId)) {
+                //    ArcaneTweaks.LOGGER.warn("Duplicate mob_equipment entry for {} — file {} overwrites a previous one", mobId, entry.getKey());
+                //}
                 parsed.put(mobId, new MobEquipmentEntry(mobId, chance, biomeGroups, globalSets));
                 
             } catch (Exception e) {

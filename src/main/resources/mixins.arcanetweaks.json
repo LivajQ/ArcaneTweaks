@@ -39,6 +39,7 @@
     "ironsspellbooks.FurledMapItemMixin",
     "ironsspellbooks.ServerPlayerEventsMixin",
     "alexscaves.ACBiomeRegistryMixin",
+    "alexscaves.ACWorldDataMixin",
     "alexscaves.NuclearExplosionEntityMixin",
     "legendarymonsters.TheObliteratorEntityMixin",
     "legendarymonsters.AnnihilationGroundNukeStrikeEntityMixin",
@@ -48,6 +49,7 @@
     "iceandfire.ItemHydraHeartMixin",
     "lendercataclysm.Ignis_EntityMixin",
     "majruszlibrary.LootHelperMixin",
+    "majruszlibrary.AttributeHandlerMixin",
     "lostcities.BuildingInfoMixin",
     "namelesstrinkets.LootTableHandlerMixin",
     "eeeabsmobs.ModArmorMaterialMixin",
@@ -61,7 +63,8 @@
     "bountifulbaubles.PhylacteryCharmItemMixin",
     "bountifulbaubles.PhylacteryCharmItemAccessor",
     "bountifulbaubles.ModEventsAccessor",
-    "attributeslib.AttributeEventsMixin"
+    "attributeslib.AttributeEventsMixin",
+    "quark.SpiralSpireGeneratorMixin"
   ],
   "client": [
     "emi.EmiRecipesMixin",

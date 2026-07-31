@@ -1,8 +1,11 @@
 package com.livajq.arcanetweaks.data;
 
+import net.minecraftforge.fml.loading.FMLLoader;
+
 public class MobEquipmentList {
     
     public static void init() {
+        if (FMLLoader.isProduction()) return;
         
         MobEquipmentBuilder.mob("minecraft:skeleton")
                 .chance(1.0f)
@@ -32,7 +35,8 @@ public class MobEquipmentList {
                 .slot("feet").item("minecraft:golden_boots").endItem().endSlot()
                 .slot("mainhand")
                 .item("minecraft:golden_sword")
-                .predefinedEnchant("minecraft:smite", 2)
+                .predefinedEnchant()
+                .addPredefined("minecraft:smite", 2)
                 .endEnchant()
                 .endItem()
                 .endSlot()
@@ -62,5 +66,17 @@ public class MobEquipmentList {
                 .endBiomeGroup()
                 
                 .createFile("wither_skeleton");
+        
+        MobEquipmentBuilder.mob("minecraft:wolf")
+                .chance(0.5f)
+                .biomeGroup()
+                .global()
+                .set()
+                .slot("head").item("minecraft:diamond_helmet").endItem().endSlot()
+                .endSet()
+                .endBiomeGroup()
+                .biomeGroup().endBiomeGroup()
+                .createFile("wolf");
+                
     }
 }

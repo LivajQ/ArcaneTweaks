@@ -56,6 +56,7 @@ public final class Config {
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> SHIELD_BASH_PROPERTIES;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISMOUNT_BIOMES;
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> TEMPERED_MONSTER_BIOMES;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> SPIRAL_SPIRE_BLOCKS;
     
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_END_BIOMETAG;
     private static final ForgeConfigSpec.ConfigValue<String> RITUAL_ADEPT_NETHER_BIOMETAG;
@@ -234,6 +235,7 @@ public final class Config {
         RITUAL_EXPERT_NETHER_BIOMETAG = BUILDER.comment("Biome tag that allows the 'Expert Nether' ritual to be performed").define("ritualExpertNetherBiome", "minecraft:is_taiga");
         
         BUILDER.pop();
+        
         BUILDER.push("canSustainPlant Rules");
         BUILDER.comment("The following can be used to add additional blocks for plants to be placed on");
         
@@ -551,6 +553,17 @@ public final class Config {
                         o -> o instanceof String
                 );
         
+        SPIRAL_SPIRE_BLOCKS = BUILDER
+                .comment("Blocks on which Spiral Spires can generate")
+                .defineListAllowEmpty(
+                        List.of("spiralSpireBlocks"),
+                        List.of(
+                                "minecraft:grass_block",
+                                "minecraft:sand"
+                        ),
+                        o -> o instanceof String
+                );
+        
         NARRATOR_KEYBIND = BUILDER.comment("If for some reason you want to bring the narrator keybind back, set this to true").define("narratorKeybind", false);
         
         SOUL_FRACTURE_STRENGTH = BUILDER.comment("Maximum health reduction per level of the Soul Fracture effect (1.0 = 100%)").defineInRange("soulFractureStrength", 0.02D, 0.0D, 1.0D);
@@ -575,6 +588,7 @@ public final class Config {
     public static Set<String> dragonNukeImmuneSet;
     public static Set<String> villagerBookBlacklistSet;
     public static Set<String> dismountBiomesSet;
+    public static Set<String> spiralSpireBlocksSet;
  
     public static Map<ResourceLocation, Set<ResourceLocation>> extraPlantSurfaces = new HashMap<>();
     public static Map<ResourceLocation, Set<ResourceLocation>> extraPlantSurfacesWater = new HashMap<>();
@@ -730,6 +744,7 @@ public final class Config {
         bossMultiplayerToughnessScaling = BOSS_MULTIPLAYER_TOUGHNESS_SCALING.get();
         deathsForBossFullHeal = DEATHS_FOR_BOSS_FULL_HEAL.get();
         temperedMonsterBiomes = parseTemperedMonsterBiomes();
+        spiralSpireBlocksSet = new HashSet<>(SPIRAL_SPIRE_BLOCKS.get());
     }
     
     // =========================================================
