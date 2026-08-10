@@ -10,4 +10,7 @@ public class ArcaneTags {
  
     public static final TagKey<EntityType<?>> DISABLES_MELEE_BLOCK =
             TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArcaneTweaks.MODID, "disables_melee_block"));
+    
+    public static final TagKey<EntityType<?>> FRENZY_FIRE_IMMUNE =
+            TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(ArcaneTweaks.MODID, "frenzy_fire_immune"));
 }

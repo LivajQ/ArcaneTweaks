@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 public final class ArcaneDamageSources {
     
     public static final ResourceKey<DamageType> VAPORIZED = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArcaneTweaks.MODID, "vaporized"));
+    public static final ResourceKey<DamageType> IN_FRENZY_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArcaneTweaks.MODID, "in_frenzy_fire"));
     
     public static DamageSource vaporized(Level level) {
         Holder<DamageType> type = level.registryAccess()
@@ -28,6 +29,25 @@ public final class ArcaneDamageSources {
                
                 return Component.translatable(
                         "death.attack.vaporized." + i,
+                        entity.getDisplayName()
+                );
+            }
+        };
+    }
+    
+    public static DamageSource inFrenziedFire(Level level) {
+        Holder<DamageType> type = level.registryAccess()
+                .registryOrThrow(Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(IN_FRENZY_FIRE);
+        
+        return new DamageSource(type) {
+            
+            @Override
+            public Component getLocalizedDeathMessage(LivingEntity entity) {
+                int i = entity.getRandom().nextInt(3);
+                
+                return Component.translatable(
+                        "death.attack.in_frenzy_fire." + i,
                         entity.getDisplayName()
                 );
             }

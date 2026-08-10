@@ -18,6 +18,8 @@ import com.livajq.arcanetweaks.util.SpecialDeathMessages;
 import com.livajq.arcanetweaks.world.level.storage.loot.predicates.ModLootConditions;
 import com.mojang.logging.LogUtils;
 import net.miauczel.legendary_monsters.effect.ModEffects;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -104,6 +106,10 @@ public class ArcaneTweaks {
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
                 SpecialDeathMessages.init();
+                ItemBlockRenderTypes.setRenderLayer(
+                        ArcaneBlocks.FRENZY_FIRE_BLOCK.get(),
+                        RenderType.cutout()
+                );
             });
         }
     }

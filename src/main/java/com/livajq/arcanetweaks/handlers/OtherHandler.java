@@ -1,6 +1,7 @@
 package com.livajq.arcanetweaks.handlers;
 
 import com.gametechbc.traveloptics.entity.mobs.nightwarden_boss.NightwardenBossEntity;
+import com.github.L_Ender.cataclysm.entity.AnimationMonster.BossMonsters.Ignis_Entity;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
 import com.livajq.arcanetweaks.init.ArcaneSounds;
@@ -11,6 +12,7 @@ import com.ordana.spelunkery.reg.ModFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -39,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -65,6 +68,8 @@ public class OtherHandler {
     private static final String WOMPWOMP_NAME = "Therealcaprisun";
     private static final ResourceLocation MEME = new ResourceLocation(ArcaneTweaks.MODID, "textures/misc/lol.png");
     private static final Map<Player, Integer> ENTERED_DISMOUNT_BIOME_TICK = new HashMap<>();
+    
+    private static long ignisFogTick = 0;
     
     //certain eyes used as dimension teleporters instead. 1 eye now. and nothing now lol
     /*
@@ -315,6 +320,35 @@ public class OtherHandler {
             if (abyssalCurse != null) entity.addEffect(new MobEffectInstance(abyssalCurse, 110, 0, false, true), entity);
             if (abyssalFear != null) entity.addEffect(new MobEffectInstance(abyssalFear, 110, 0, false, true), entity);
             if (sapped != null) entity.addEffect(new MobEffectInstance(sapped, 110, 0, false, true), entity);
+        }
+    }
+    
+    //modify out fog effects when Ignis is in the area
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
+    public static void onRenderFog(ViewportEvent.RenderFog event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        ClientLevel level = Minecraft.getInstance().level;
+        
+        if (player != null && level != null) {
+            for (Entity e : level.entitiesForRendering()) {
+                if (e instanceof Ignis_Entity ignis) {
+                    float scale = 1.0F - 0.25F * Math.min(1.0F, (float) ignis.tickCount / 60);
+                    event.setNearPlaneDistance(event.getNearPlaneDistance() * scale);
+                    event.setFarPlaneDistance(event.getFarPlaneDistance() * scale);
+                    
+                    ignisFogTick = level.getGameTime();
+                    return;
+                }
+            }
+            
+            if (ignisFogTick > 0) {
+                long ticksSinceDeath = level.getGameTime() - ignisFogTick;
+                float scale = 1.0F - 0.25F * Math.min(1.0F, (float) (60 - ticksSinceDeath) / 60);
+                event.setNearPlaneDistance(event.getNearPlaneDistance() * scale);
+                event.setFarPlaneDistance(event.getFarPlaneDistance() * scale);
+                if (ticksSinceDeath > 60) ignisFogTick = 0;
+            }
         }
     }
     
