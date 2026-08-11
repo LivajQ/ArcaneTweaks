@@ -35,7 +35,7 @@ public final class ArcaneDamageSources {
         };
     }
     
-    public static DamageSource inFrenziedFire(Level level) {
+    public static DamageSource inFrenzyFire(Level level) {
         Holder<DamageType> type = level.registryAccess()
                 .registryOrThrow(Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(IN_FRENZY_FIRE);

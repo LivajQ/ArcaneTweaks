@@ -80,7 +80,7 @@ public class FrenzyFireBlock extends BaseFireBlock {
         }
         else entity.addEffect(new MobEffectInstance(soulFracture, 160, 0));
         
-        entity.hurt(ArcaneDamageSources.inFrenziedFire(level), this.frenzyFireDamage);
+        entity.hurt(ArcaneDamageSources.inFrenzyFire(level), this.frenzyFireDamage);
     }
     
     @Override

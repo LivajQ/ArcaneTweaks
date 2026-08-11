@@ -31,6 +31,7 @@
     "betterend.SulphuricLakeFeatureMixin",
     "betterend.SulphurHillFeatureMixin",
     "betterend.GeyserFeatureMixin",
+    "betterend.HydrothermalVentBlockMixin",
     "goety.ApostleMixin",
     "goety.ItemEventsMixin",
     "reskillable.SkillAttributeBonusMixin",
