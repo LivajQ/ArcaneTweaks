@@ -1,7 +1,7 @@
 package com.livajq.arcanetweaks.mixin.vanilla;
 
+import com.estie.arcanecontent.init.ArcaneSounds;
 import com.livajq.arcanetweaks.ArcaneTweaks;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

@@ -1,8 +1,8 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
+import com.estie.arcanecontent.init.ArcaneSounds;
 import com.github.alexthe666.iceandfire.entity.EntityLightningDragon;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
 import net.minecraft.sounds.SoundEvent;
 
 import java.awt.*;

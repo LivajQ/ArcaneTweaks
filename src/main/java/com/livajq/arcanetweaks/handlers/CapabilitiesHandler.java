@@ -1,12 +1,12 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.common.capability.bossminion.BossMinionData;
+import com.estie.arcanecontent.common.capability.bossminion.BossMinionProvider;
+import com.estie.arcanecontent.common.capability.foodbonuses.FoodBonusesData;
+import com.estie.arcanecontent.common.capability.foodbonuses.FoodBonusesProvider;
+import com.estie.arcanecontent.common.capability.parry.ParryData;
+import com.estie.arcanecontent.common.capability.parry.ParryProvider;
 import com.livajq.arcanetweaks.ArcaneTweaks;
-import com.livajq.arcanetweaks.common.capability.bossminion.BossMinionData;
-import com.livajq.arcanetweaks.common.capability.bossminion.BossMinionProvider;
-import com.livajq.arcanetweaks.common.capability.foodbonuses.FoodBonusesData;
-import com.livajq.arcanetweaks.common.capability.foodbonuses.FoodBonusesProvider;
-import com.livajq.arcanetweaks.common.capability.parry.ParryData;
-import com.livajq.arcanetweaks.common.capability.parry.ParryProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;

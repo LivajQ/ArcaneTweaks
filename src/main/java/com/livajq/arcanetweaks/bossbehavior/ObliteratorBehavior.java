@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
 import net.miauczel.legendary_monsters.entity.AnimatedMonster.IAnimatedBoss.TheObliterator.TheObliteratorEntity;
 import net.miauczel.legendary_monsters.entity.ModEntities;
 import net.minecraft.ChatFormatting;

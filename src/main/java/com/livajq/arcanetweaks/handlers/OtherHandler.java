@@ -1,12 +1,12 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.init.ArcaneSounds;
+import com.estie.arcanecontent.world.district.DistrictBiomeSource;
 import com.gametechbc.traveloptics.entity.mobs.nightwarden_boss.NightwardenBossEntity;
 import com.github.L_Ender.cataclysm.entity.AnimationMonster.BossMonsters.Ignis_Entity;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
 import com.livajq.arcanetweaks.mixin.vanilla.ChunkGeneratorAccessor;
-import com.livajq.arcanetweaks.world.district.DistrictBiomeSource;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ordana.spelunkery.reg.ModFluids;
 import net.minecraft.ChatFormatting;

@@ -1,12 +1,12 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
+import com.estie.arcanecontent.init.ArcaneDamageSources;
+import com.estie.arcanecontent.init.ArcaneSounds;
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.item.NuclearExplosionEntity;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.init.ArcaneDamageSources;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
 import net.miauczel.legendary_monsters.Particle.custom.MovingTrailParticle;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

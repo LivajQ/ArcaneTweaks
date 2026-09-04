@@ -1,7 +1,7 @@
 package com.livajq.arcanetweaks.mixin.spartanshields;
 
+import com.estie.arcanecontent.init.ArcaneAttributes;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.init.ArcaneAttributes;
 import com.oblivioussp.spartanshields.network.ShieldBashPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;

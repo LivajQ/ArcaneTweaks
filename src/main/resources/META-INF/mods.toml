@@ -211,3 +211,10 @@ mandatory=false
 versionRange="[4.0-462,)"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="arcanecontent"
+mandatory=true
+versionRange="[0.0.1,)"
+ordering="AFTER"
+side="BOTH"

@@ -1,7 +1,7 @@
 package com.livajq.arcanetweaks;
 
 import com.Polarice3.Goety.utils.MathHelper;
-import com.livajq.arcanetweaks.common.item.BlockItemOfSilly;
+import com.estie.arcanecontent.common.item.BlockItemOfSilly;
 import com.livajq.arcanetweaks.mobs.MobStats;
 import net.bandit.reskillable.common.commands.skills.SkillAttributeBonus;
 import net.minecraft.core.registries.Registries;

@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.util;
 
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

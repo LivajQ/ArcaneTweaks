@@ -1,10 +1,10 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.bossbehavior.BossBehavior;
 import com.livajq.arcanetweaks.bossbehavior.BossBehaviorRegistry;
 import com.livajq.arcanetweaks.bossbehavior.HurtResult;
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

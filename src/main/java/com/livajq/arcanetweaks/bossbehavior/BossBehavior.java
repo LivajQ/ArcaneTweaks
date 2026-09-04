@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -8,8 +8,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.*;
 

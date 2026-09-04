@@ -1,11 +1,11 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
+import com.estie.arcanecontent.common.capability.parry.ParryData;
+import com.estie.arcanecontent.init.ArcaneSounds;
+import com.estie.arcanecontent.init.ArcaneTags;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
-import com.livajq.arcanetweaks.common.capability.parry.ParryData;
-import com.livajq.arcanetweaks.init.ArcaneSounds;
-import com.livajq.arcanetweaks.init.ArcaneTags;
 import com.livajq.arcanetweaks.packet.UseParcoolStaminaServerPacket;
 import com.oblivioussp.spartanweaponry.api.ModToolActions;
 import net.minecraft.server.level.ServerPlayer;

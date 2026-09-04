@@ -1,7 +1,7 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.init.ArcaneAttributes;
 import com.livajq.arcanetweaks.ArcaneTweaks;
-import com.livajq.arcanetweaks.init.ArcaneAttributes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

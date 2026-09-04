@@ -1,8 +1,8 @@
 package com.livajq.arcanetweaks.handlers;
 
+import com.estie.arcanecontent.common.capability.ArcaneCapabilities;
 import com.livajq.arcanetweaks.ArcaneTweaks;
 import com.livajq.arcanetweaks.Config;
-import com.livajq.arcanetweaks.common.capability.ArcaneCapabilities;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

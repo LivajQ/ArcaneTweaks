@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.bossbehavior;
 
-import com.livajq.arcanetweaks.init.ArcaneSounds;
+import com.estie.arcanecontent.init.ArcaneSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 

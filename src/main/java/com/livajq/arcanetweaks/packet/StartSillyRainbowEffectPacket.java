@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.packet;
 
-import com.livajq.arcanetweaks.common.item.BlockItemOfSilly;
+import com.estie.arcanecontent.common.item.BlockItemOfSilly;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 

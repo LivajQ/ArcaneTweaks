@@ -1,6 +1,6 @@
 package com.livajq.arcanetweaks.mixin.betterend;
 
-import com.livajq.arcanetweaks.init.ArcaneTags;
+import com.estie.arcanecontent.init.ArcaneTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;

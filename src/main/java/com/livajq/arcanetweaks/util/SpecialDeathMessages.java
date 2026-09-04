@@ -1,5 +1,6 @@
 package com.livajq.arcanetweaks.util;
 
+import com.estie.arcanecontent.ArcaneContent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +20,7 @@ import java.util.*;
 @OnlyIn(Dist.CLIENT)
 public class SpecialDeathMessages {
     public static final Map<UUID, List<String>> DEATH_MESSAGES = new HashMap<>();
-    public static final ResourceLocation DEATH_MESSAGES_FILE = new ResourceLocation(ArcaneTweaks.MODID, "special_death_messages/messages.json");
+    public static final ResourceLocation DEATH_MESSAGES_FILE = new ResourceLocation(ArcaneContent.MODID, "special_death_messages/messages.json");
     
     public static void init() {
         DEATH_MESSAGES.clear();

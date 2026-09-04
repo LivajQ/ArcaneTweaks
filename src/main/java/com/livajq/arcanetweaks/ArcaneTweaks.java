@@ -1,6 +1,7 @@
 package com.livajq.arcanetweaks;
 
 import com.Polarice3.Goety.api.ritual.RitualType;
+import com.estie.arcanecontent.init.ArcaneBiomeSources;
 import com.livajq.arcanetweaks.bossbehavior.BossBehaviorRegistry;
 import com.livajq.arcanetweaks.client.renderer.dimensioneffects.EndSkyboxEffects;
 import com.livajq.arcanetweaks.compat.alexscaves.BiomeConfigLoader;
@@ -11,13 +12,10 @@ import com.livajq.arcanetweaks.compat.goety.ritualtype.ExpertNetherCustomRitualT
 import com.livajq.arcanetweaks.handlers.PacketHandler;
 import com.livajq.arcanetweaks.handlers.ResistanceHandler;
 import com.livajq.arcanetweaks.handlers.ResourceReloadHandler;
-import com.livajq.arcanetweaks.init.*;
 import com.livajq.arcanetweaks.util.SpecialDeathMessages;
 import com.livajq.arcanetweaks.world.level.storage.loot.predicates.ModLootConditions;
 import com.mojang.logging.LogUtils;
 import net.miauczel.legendary_monsters.effect.ModEffects;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -49,13 +47,6 @@ public class ArcaneTweaks {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::onRegister);
         forgeEventBus.addListener(this::reloadListener);
-        
-        ArcaneEntities.ENTITY_TYPES.register(modEventBus);
-        modEventBus.addListener(ArcaneEntities::onRegisterAttributes);
-        ArcaneSounds.SOUNDS.register(modEventBus);
-        ArcaneBlocks.BLOCKS.register(modEventBus);
-        ArcaneItems.ITEMS.register(modEventBus);
-        ArcaneAttributes.ATTRIBUTES.register(modEventBus);
         
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC, MODID + "/arcanetweaks.toml");
     }
@@ -100,10 +91,6 @@ public class ArcaneTweaks {
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
                 SpecialDeathMessages.init();
-                ItemBlockRenderTypes.setRenderLayer(
-                        ArcaneBlocks.FRENZY_FIRE_BLOCK.get(),
-                        RenderType.cutout()
-                );
             });
         }
     }
